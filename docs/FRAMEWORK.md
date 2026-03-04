@@ -1,5 +1,7 @@
 # PlanetBots — Framework Reference
 
+**Sequenced work:** See [docs/roadmap.md](roadmap.md) and [docs/milestones/](milestones/) for milestones and work items one-by-one.
+
 ## Repo Layout
 
 ```
