@@ -20,6 +20,8 @@ local function make_field_drone(name, params)
   return {
     type                                = "construction-robot",
     name                                = name,
+    flags                               = { "placeable-player", "player-creation", "placeable-off-grid", "not-on-map" },
+    minable                             = { mining_time = 0.1, result = "pb-field-drone" },  -- item name (entity is pb-field-drone-home)
     icons                               = sprite_util.planet_icon("__base__/graphics/icons/construction-robot.png", tint),
     idle                                = sprite_util.tinted_copy(vanilla.idle, tint),
     idle_with_cargo                     = sprite_util.tinted_copy(vanilla.idle_with_cargo, tint),

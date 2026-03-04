@@ -23,6 +23,8 @@ local function make_vulcanus_logistic(name, tint, params)
   return {
     type                                = "logistic-robot",
     name                                = name,
+    flags                               = { "placeable-player", "player-creation", "placeable-off-grid", "not-on-map" },
+    minable                             = { mining_time = 0.1, result = name },
     icons                               = sprite_util.planet_icon("__base__/graphics/icons/logistic-robot.png", tint),
     idle                                = sprite_util.tinted_copy(vanilla_lb.idle, tint),
     idle_with_cargo                     = sprite_util.tinted_copy(vanilla_lb.idle_with_cargo, tint),
@@ -53,6 +55,8 @@ local function make_vulcanus_construction(name, tint, params)
   return {
     type                                = "construction-robot",
     name                                = name,
+    flags                               = { "placeable-player", "player-creation", "placeable-off-grid", "not-on-map" },
+    minable                             = { mining_time = 0.1, result = name },
     icons                               = sprite_util.planet_icon("__base__/graphics/icons/construction-robot.png", tint),
     idle                                = sprite_util.tinted_copy(vanilla_cb.idle, tint),
     idle_with_cargo                     = sprite_util.tinted_copy(vanilla_cb.idle_with_cargo, tint),

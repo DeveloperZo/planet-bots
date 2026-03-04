@@ -19,6 +19,8 @@ local function make_depot(name, params)
   return {
     type                         = "roboport",
     name                         = name,
+    flags                        = { "placeable-player", "player-creation" },
+    minable                      = { mining_time = 0.1, result = name },
     icons                        = sprite_util.planet_icon("__base__/graphics/icons/roboport.png", tint),
     base                         = sprite_util.tinted_copy(vanilla.base, tint),
     base_animation               = sprite_util.tinted_copy(vanilla.base_animation, tint),
