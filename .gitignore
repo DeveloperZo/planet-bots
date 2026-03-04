@@ -1,0 +1,22 @@
+# Factorio mod build artifacts
+*.zip
+thumbnail.png
+
+# Factorio runtime files
+*.dat
+*.log
+
+# Local API documentation (large, publicly available from lua-api.factorio.com)
+archive/
+
+# Cursor IDE project files
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors
+*.swp
+*~

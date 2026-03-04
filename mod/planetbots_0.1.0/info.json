@@ -1,0 +1,12 @@
+{
+  "name": "planetbots",
+  "version": "0.1.0",
+  "title": "PlanetBots",
+  "author": "your-name-here",
+  "description": "Planet-influenced logistics. Each planet produces specialized robots and roboports with distinct mechanical identities. No universal best — each family excels in one dimension and pays for it in another.",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base >= 2.0.0",
+    "? space-age"
+  ]
+}

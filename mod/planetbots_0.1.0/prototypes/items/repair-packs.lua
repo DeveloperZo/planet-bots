@@ -1,0 +1,7 @@
+-- REMOVED
+-- Planet repair packs cut. RepairToolPrototype only exposes speed and durability.
+-- on_robot_repaired_entity does not exist — bot repair is opaque to scripts.
+-- on_player_repaired_entity exists but doesn't expose which item was consumed.
+-- No design space for meaningful planet identity at prototype level.
+-- No runtime hooks to support scripted side effects on bot repair.
+-- See: docs/FRAMEWORK.md decision log.
