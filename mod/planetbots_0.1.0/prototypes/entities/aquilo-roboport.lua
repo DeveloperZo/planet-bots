@@ -1,29 +1,36 @@
 -- prototypes/entities/aquilo-roboport.lua
--- Aquilo roboport. Identity: sustained charging under Aquilo's 5x energy drain.
--- All airborne robots on Aquilo consume 5x normal energy. Without a port designed
--- for this, networks stall: bots deplete, queues back up, builds never finish.
+-- Aquilo specialty: the best roboport in the mod.
+-- 4x vanilla charging energy, 2x charging stations, 1.4x robot slots.
+-- Designed to handle Aquilo's 5x energy drain forcing constant high-frequency
+-- recharge cycles — the over-engineering required for Aquilo makes it the
+-- dominant roboport choice for any serious network anywhere.
 --
--- Design levers: charging_energy (moderate sustained, not peak burst — that's Fulgora),
--- charging_station_count (steady queue handling), robot_slots_count (large — Aquilo
--- networks need more bots in the air to compensate for slow drain-heavy cycles).
--- Recipe is expensive (lithium + quantum processors) — gated behind Aquilo production.
+-- Craftable anywhere — gate is the supply chain: lithium-plate and
+-- quantum-processor must be shipped from Aquilo.
 --
 -- Vanilla baseline:
---   charging_energy: "1000kW", charging_station_count: 4,
---   robot_slots_count: 50, logistics_radius: 25, construction_radius: 55
+--   charging_energy: "1000kW", charging_station_count: 4, robot_slots_count: 50
 
 local palettes    = require("prototypes.shared.palettes")
 local sprite_util = require("prototypes.shared.sprite-util")
 
+local tint    = palettes.aquilo
 local vanilla = data.raw["roboport"]["roboport"]
 
-local function make_aquilo_roboport(name, tint, params)
-  return {
+local ICON_BASE  = "__base__/graphics/icons/roboport.png"
+local ICON_BADGE = "__base__/graphics/icons/roboport.png"
+
+data:extend({
+  {
     type                         = "roboport",
-    name                         = name,
+    name                         = "pb-aquilo-roboport",
     flags                        = { "placeable-player", "player-creation" },
-    minable                      = { mining_time = 0.1, result = name },
-    icons                        = sprite_util.planet_icon("__base__/graphics/icons/roboport.png", tint),
+    minable                      = { mining_time = 0.1, result = "pb-aquilo-roboport" },
+    -- Two-layer specialty icon: vanilla base + cryo-blue badge (CoVe: scale=0.4 for 32px legibility)
+    icons = {
+      { icon = ICON_BASE,  icon_size = 64 },
+      { icon = ICON_BADGE, icon_size = 64, scale = 0.4, shift = { 8, 8 }, tint = tint },
+    },
     base                         = sprite_util.tinted_copy(vanilla.base, tint),
     base_animation               = sprite_util.tinted_copy(vanilla.base_animation, tint),
     base_patch                   = sprite_util.tinted_copy(vanilla.base_patch, tint),
@@ -40,9 +47,9 @@ local function make_aquilo_roboport(name, tint, params)
     logistics_radius             = 25,
     construction_radius          = 55,
     -- ── PRIMARY LEVERS ────────────────────────────────────────────────────
-    charging_energy              = params.charging_energy,
-    charging_station_count       = params.charging_station_count,
-    robot_slots_count            = params.robot_slots_count,      -- PRIMARY: large fleet for drain-heavy cycles
+    charging_energy              = "4000kW",  -- 4x vanilla; sustained throughput not burst
+    charging_station_count       = 8,         -- 2x vanilla simultaneous charge slots
+    robot_slots_count            = 70,        -- 1.4x vanilla; large fleets for drain-heavy networks
     material_slots_count         = 7,
     -- Energy
     energy_source = {
@@ -54,17 +61,4 @@ local function make_aquilo_roboport(name, tint, params)
     energy_usage     = "50kW",
     recharge_minimum = "10MJ",
   }
-end
-
-data:extend({
-  make_aquilo_roboport("pb-aquilo-roboport-home", palettes.aquilo, {
-    charging_energy        = "4000kW",  -- 4x vanilla; sustained, not peak burst
-    charging_station_count = 6,
-    robot_slots_count      = 70,        -- large fleets cover ground efficiently under drain
-  }),
-  make_aquilo_roboport("pb-aquilo-roboport-foreign", palettes.aquilo_foreign, {
-    charging_energy        = "2500kW",  -- 2.5x vanilla; efficient charging travels with the port
-    charging_station_count = 5,
-    robot_slots_count      = 60,
-  }),
 })

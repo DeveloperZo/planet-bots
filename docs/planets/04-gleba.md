@@ -1,70 +1,59 @@
 # Gleba
 
-## Identity
+## Specialty: Compost Chest
 
-Endurance robotics for large, persistent swarms. Not the fastest, not the heaviest — the fleet that keeps going. Low idle drain and efficient movement mean hundreds of bots can stay airborne far longer between charges. Gleba's nutrient economy makes maintenance cheap; this family is the expression of that — a swarm that thrives when fed.
+Gleba does not produce a specialty robot or roboport. Its contribution to the inter-planetary
+robot economy is the **Compost Chest** — the only structure in the mod that actively manages
+spoilage for items stored inside it.
 
-The emotional payoff: you have 300 bots and none of them are stalling. That's the Gleba feeling.
+Gleba's nutrient economy makes this thematic: the chest is fed nutrients as fuel, and while
+fueled it preserves its contents. Let the fuel run out and it punishes you — items spoil faster
+than they would outside. The chest integrates into the nutrient pipeline rather than sitting
+beside it.
 
-**Primary lever:** `energy_per_tick` (0.8 kW home vs vanilla 3 kW — 0.27× idle drain). Speed and payload offer no advantage.
+Useful anywhere spoilable items transit through or accumulate: Gleba itself, agricultural
+outposts, science pack buffer chests.
 
----
-
-## Roboport — Gleba Roboport
-
-**Entities:** `pb-gleba-roboport-home` / `pb-gleba-roboport-foreign`
-
-**Purpose:** Support large persistent bot fleets without charge congestion. The primary lever is `robot_slots_count` (80 home — 1.6× vanilla), which lets a genuinely large swarm sit in one port. Charging is moderate — steady enough to sustain the fleet without bursts, because the bots don't queue as aggressively (low idle drain means they return less often).
-
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Charging energy | 1,500 kW | 1,200 kW | 1,000 kW |
-| Charging stations | 6 | 5 | 4 |
-| Robot slots | **80** | **65** | 50 |
-| Logistics radius | 25 | 25 | 25 |
-| Construction radius | 55 | 55 | 55 |
-
-**Recipe gate:** vanilla roboport + bioflux.
+**Why Gleba?** The planet is defined by the spoilage clock and the nutrient loop. A chest that
+externalizes that loop as a mechanic is the natural Gleba contribution — not faster or heavier
+robots, but a structural solution to the problem Gleba creates.
 
 ---
 
-## Logistic Bot — Gleba Logistic Robot
+## Compost Chest — behavior summary
 
-**Entities:** `pb-gleba-logistic-robot-home` / `pb-gleba-logistic-robot-foreign`
+See full specification: `[docs/milestones/02-planet-chests/compost-chest-design.md](../milestones/02-planet-chests/compost-chest-design.md)`
 
-**Purpose:** Sustained steady-state item movement without extreme charging throughput. The low idle drain means bots spend more time carrying and less time charging. Not fast, not heavy — just persistent. A large fleet of these outperforms a small fleet of specialists in any scenario where uptime matters more than burst speed.
 
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Speed | 0.05 | 0.05 | 0.05 |
-| Max speed | 0.15 | 0.15 | — |
-| Max energy | 2 MJ | 1.8 MJ | 1.5 MJ |
-| Energy per move | 2.5 kJ | 3 kJ | 5 kJ |
-| Energy per tick | **0.8 kW** | 1.5 kW | 3 kW |
-| Payload | 1 | 1 | 1 |
+| State        | Spoil rate inside chest | Condition                      |
+| ------------ | ----------------------- | ------------------------------ |
+| **Fueled**   | **15% of normal**       | Nutrient in slot 1 (fuel slot) |
+| **Unfueled** | **200% of normal**      | Fuel slot empty                |
 
----
 
-## Construction Bot — Gleba Construction Robot
+**Fuel consumption:** 1 nutrient per minute of fueled operation.
 
-**Entities:** `pb-gleba-construction-robot-home` / `pb-gleba-construction-robot-foreign`
-
-**Purpose:** Long-running construction operations on large or spread-out sites. Where other families stall mid-build because bots drain and queue up, Gleba bots keep working. The extended airborne time per charge cycle means big blueprint drops complete without constant charging interruptions.
-
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Speed | 0.055 | 0.055 | 0.06 |
-| Max speed | 0.15 | 0.15 | — |
-| Max energy | 2 MJ | 1.8 MJ | 1.5 MJ |
-| Energy per move | 2.5 kJ | 3 kJ | 5 kJ |
-| Energy per tick | **0.8 kW** | 1.5 kW | 3 kW |
-| Payload | 1 | 1 | 1 |
+Slot 1 is locked to `nutrient` by the script. Slots 2–20 are general storage.
 
 ---
 
-## Non-Home Variant
+## Recipe
 
-Foreign variants retain above-vanilla efficiency (3 kJ/move vs 5 kJ vanilla, 1.5 kW/tick vs 3 kW vanilla) but lose the full endurance advantage. Useful for large-fleet setups anywhere.
+**Item name:** `pb-gleba-compost-chest`
 
-**On Fulgora:** no electric resistance — not lightning-safe.  
-**On Aquilo:** 5× drain reduces the endurance advantage significantly. Aquilo bots are built specifically for this environment and will outperform Gleba bots there.
+**Ingredients:** iron-chest × 1 + bioflux × 3 + nutrients × 10 + wooden-chest × 2
+
+No `surface_conditions`. Craftable anywhere. Requires a Gleba supply line for the bioflux.
+
+**Tech gate:** `pb-gleba-robotics` — requires agricultural science pack.
+
+---
+
+## Robots and Roboports
+
+Gleba does **not** produce specialty robots or roboports. Use:
+
+- **Vulcanus construction bots** for large builds
+- **Fulgora logistic bots** for fast delivery
+- **Aquilo roboports** as your network backbone
+

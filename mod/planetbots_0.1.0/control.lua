@@ -1,29 +1,43 @@
 -- control.lua
 -- Runtime scripting for PlanetBots.
--- Two responsibilities only:
---   1. Placement variant swap: on_built_entity checks surface, swaps to home or foreign variant
---   2. Field Drone depot cap: count depots per force, cancel build if over cap
+--
+-- Responsibilities:
+--   1. Field Drone Depot placement: off-Nauvis block + depot cap enforcement.
+--   2. Fulgora logistic bot: electric damage hardening (lightning immunity).
+--   3. Gleba compost chest: nutrient fuel slot + spoilage rate management.
+--
+-- Cargo pod variant normalization removed: no home/foreign variants in this design.
 
 local placement = require("scripts.placement")
-local depot_cap  = require("scripts.depot-cap")
+local depot_cap = require("scripts.depot-cap")
+local hardening = require("scripts.fulgora-hardening")
+local compost   = require("scripts.compost-chest")
 
--- ─── Event Registration ────────────────────────────────────────────────────
+-- ─── Build / placement events ────────────────────────────────────────────────
 
-script.on_event(defines.events.on_built_entity,          placement.on_built)
-script.on_event(defines.events.on_robot_built_entity,    placement.on_built)
-script.on_event(defines.events.script_raised_built,      placement.on_built)
+script.on_event(defines.events.on_built_entity,       placement.on_built)
+script.on_event(defines.events.on_robot_built_entity, placement.on_built)
+script.on_event(defines.events.script_raised_built,   placement.on_built)
 
--- Depot cap is checked inside placement.on_built for Field Drone Depots.
--- depot_cap module exposes the cap table and research upgrade hook.
+-- ─── Research ───────────────────────────────────────────────────────────────
 
-script.on_event(defines.events.on_research_finished,     depot_cap.on_research_finished)
+script.on_event(defines.events.on_research_finished, depot_cap.on_research_finished)
 
--- ─── Init / Load ──────────────────────────────────────────────────────────
+-- ─── Fulgora hardening ──────────────────────────────────────────────────────
+
+hardening.register()
+
+-- ─── Compost chest ──────────────────────────────────────────────────────────
+
+compost.register_events()
+
+-- ─── Init / Load ────────────────────────────────────────────────────────────
 
 script.on_init(function()
   depot_cap.init()
+  compost.init()
 end)
 
 script.on_load(function()
-  -- nothing stateful to restore beyond what storage holds
+  -- storage is already populated; no re-init needed
 end)

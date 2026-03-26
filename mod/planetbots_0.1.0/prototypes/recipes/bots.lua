@@ -1,14 +1,14 @@
 -- prototypes/recipes/bots.lua
--- Two recipes per planet bot family: home (planet-gated) and foreign (everywhere else).
--- surface_conditions uses custom pb-* surface properties patched in data-final-fixes.lua.
---
---   Home recipe:    { property = "pb-vulcanus", min = 1 } => Vulcanus assemblers only
---   Foreign recipe: { property = "pb-vulcanus", max = 0 } => all other surfaces (default 0)
+-- Specialty bot recipes. One recipe per specialty — no surface_conditions.
+-- Gate is the supply chain: planet materials must be shipped to the crafting location.
 --
 -- Field Drone: single recipe, no surface_conditions (Nauvis-only enforced at runtime).
--- Ingredient quantities: TODO — balance pass.
+--
+-- Item name verification (CoVe): supercapacitor confirmed on Fulgora wiki.
+-- Ingredient amounts: first-pass values — balance pass in Milestone 1.3.
 
 data:extend({
+  -- ── Pre-vanilla ──────────────────────────────────────────────────────────
   {
     type            = "recipe",
     name            = "pb-field-drone",
@@ -21,109 +21,36 @@ data:extend({
     results         = {{ type = "item", name = "pb-field-drone", amount = 1 }},
     energy_required = 3,
   },
+
+  -- ── Vulcanus specialty: construction robot ────────────────────────────────
+  -- Requires tungsten-plate and calcite from Vulcanus supply line.
+  {
+    type            = "recipe",
+    name            = "pb-vulcanus-construction-robot",
+    enabled         = false,
+    ingredients     = {
+      { type = "item", name = "construction-robot", amount = 1 },
+      { type = "item", name = "tungsten-plate",     amount = 5 },  -- TODO: tune in balance pass
+      { type = "item", name = "calcite",            amount = 3 },  -- TODO: tune in balance pass
+      { type = "item", name = "steel-plate",        amount = 4 },
+    },
+    results         = {{ type = "item", name = "pb-vulcanus-construction-robot", amount = 1 }},
+    energy_required = 5,
+  },
+
+  -- ── Fulgora specialty: logistic robot ─────────────────────────────────────
+  -- Requires supercapacitor and holmium-plate from Fulgora supply line.
+  {
+    type            = "recipe",
+    name            = "pb-fulgora-logistic-robot",
+    enabled         = false,
+    ingredients     = {
+      { type = "item", name = "logistic-robot",   amount = 1 },
+      { type = "item", name = "supercapacitor",   amount = 4 },  -- TODO: verify item name at runtime; tune in balance pass
+      { type = "item", name = "holmium-plate",    amount = 3 },  -- TODO: tune in balance pass
+      { type = "item", name = "advanced-circuit", amount = 6 },
+    },
+    results         = {{ type = "item", name = "pb-fulgora-logistic-robot", amount = 1 }},
+    energy_required = 5,
+  },
 })
-
-local FAMILIES = {
-  -- Vulcanus
-  {
-    prefix     = "pb-vulcanus-logistic-robot",
-    property   = "pb-vulcanus",
-    craft_time = 5,
-    ingredients = {
-      { type = "item", name = "logistic-robot",  amount = 1 },
-      { type = "item", name = "tungsten-plate",  amount = 3 },  -- TODO: tune
-    },
-  },
-  {
-    prefix     = "pb-vulcanus-construction-robot",
-    property   = "pb-vulcanus",
-    craft_time = 5,
-    ingredients = {
-      { type = "item", name = "construction-robot", amount = 1 },
-      { type = "item", name = "tungsten-plate",     amount = 3 },  -- TODO: tune
-    },
-  },
-  -- Gleba
-  {
-    prefix     = "pb-gleba-logistic-robot",
-    property   = "pb-gleba",
-    craft_time = 5,
-    ingredients = {
-      { type = "item", name = "logistic-robot", amount = 1 },
-      { type = "item", name = "bioflux",        amount = 3 },  -- TODO: tune
-    },
-  },
-  {
-    prefix     = "pb-gleba-construction-robot",
-    property   = "pb-gleba",
-    craft_time = 5,
-    ingredients = {
-      { type = "item", name = "construction-robot", amount = 1 },
-      { type = "item", name = "bioflux",            amount = 3 },  -- TODO: tune
-    },
-  },
-  -- Fulgora
-  {
-    prefix     = "pb-fulgora-logistic-robot",
-    property   = "pb-fulgora",
-    craft_time = 5,
-    ingredients = {
-      { type = "item", name = "logistic-robot", amount = 1 },
-      { type = "item", name = "supercapacitor", amount = 1 },  -- TODO: tune
-    },
-  },
-  {
-    prefix     = "pb-fulgora-construction-robot",
-    property   = "pb-fulgora",
-    craft_time = 5,
-    ingredients = {
-      { type = "item", name = "construction-robot", amount = 1 },
-      { type = "item", name = "supercapacitor",     amount = 1 },  -- TODO: tune
-    },
-  },
-  -- Aquilo
-  {
-    prefix     = "pb-aquilo-logistic-robot",
-    property   = "pb-aquilo",
-    craft_time = 8,
-    ingredients = {
-      { type = "item", name = "logistic-robot",    amount = 1 },
-      { type = "item", name = "lithium-plate",     amount = 3 },  -- TODO: tune
-      { type = "item", name = "quantum-processor", amount = 1 },
-    },
-  },
-  {
-    prefix     = "pb-aquilo-construction-robot",
-    property   = "pb-aquilo",
-    craft_time = 8,
-    ingredients = {
-      { type = "item", name = "construction-robot", amount = 1 },
-      { type = "item", name = "lithium-plate",      amount = 3 },  -- TODO: tune
-      { type = "item", name = "quantum-processor",  amount = 1 },
-    },
-  },
-}
-
-local recipes = {}
-for _, f in pairs(FAMILIES) do
-  table.insert(recipes, {
-    type               = "recipe",
-    name               = f.prefix .. "-home",
-    enabled            = false,
-    surface_conditions = { { property = f.property, min = 1 } },
-    ingredients        = f.ingredients,
-    results            = {{ type = "item", name = f.prefix .. "-home", amount = 1 }},
-    energy_required    = f.craft_time,
-  })
-  table.insert(recipes, {
-    type               = "recipe",
-    name               = f.prefix .. "-foreign",
-    enabled            = false,
-    surface_conditions = { { property = f.property, max = 0 } },
-    ingredients        = f.ingredients,
-    results            = {{ type = "item", name = f.prefix .. "-foreign", amount = 1 }},
-    energy_required    = f.craft_time,
-  })
-end
-
-data:extend(recipes)

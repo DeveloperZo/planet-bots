@@ -15,7 +15,7 @@ local function apply_tint(obj, tint)
     end
   else
     obj.tint = tint
-    obj.apply_runtime_tint = false  -- planet tint replaces force-color tinting; clear to avoid compounding
+    obj.apply_runtime_tint = false  -- planet tint replaces force-color tinting
     if obj.hr_version then
       obj.hr_version.tint = tint
       obj.hr_version.apply_runtime_tint = false
@@ -44,6 +44,26 @@ end
 -- Standard 256x256 icons array for technology entries with planet tint.
 function M.tech_icon(icon_path, tint)
   return { { icon = icon_path, icon_size = 256, tint = tint } }
+end
+
+-- Two-layer specialty icon: full-size untinted base + small planet-colored badge.
+-- The badge distinguishes specialty items from vanilla at a glance.
+-- scale=0.4 (not 0.3): at 32px inventory size, 0.3 is ~10px and barely visible.
+function M.specialty_icon(base_icon, tint)
+  return {
+    { icon = base_icon,                                  icon_size = 64 },
+    { icon = "__base__/graphics/icons/roboport.png",     icon_size = 64,
+      scale = 0.4, shift = { 8, 8 }, tint = tint },
+  }
+end
+
+-- Two-layer specialty icon for technology entries (256px base).
+function M.specialty_tech_icon(base_icon, tint)
+  return {
+    { icon = base_icon,                                  icon_size = 256 },
+    { icon = "__base__/graphics/icons/roboport.png",     icon_size = 64,
+      scale = 1.6, shift = { 32, 32 }, tint = tint },
+  }
 end
 
 return M

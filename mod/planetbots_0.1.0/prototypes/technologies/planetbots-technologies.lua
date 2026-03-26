@@ -2,13 +2,13 @@
 -- All PlanetBots research.
 --
 -- Technology tiers:
---   1. Pre-vanilla (Nauvis early) — iron/copper era; Field Drones + depot cap unlocks
---   2. Planet tiers — one per planet; gated by planet science packs
+--   1. Pre-vanilla (Nauvis early) — Field Drones + depot cap unlocks
+--   2. Planet tiers — one per planet; each unlocks ONE specialty recipe
 --
--- Each planet tech unlocks BOTH home and foreign recipe variants (6 effects per tech).
--- The engine enforces surface_conditions; players only see the variant valid on their surface.
+-- Each planet tech unlocks its single specialty item recipe.
+-- No home/foreign variants — one recipe per planet.
 --
--- Science pack names (Space Age) — confirmed against data.raw wiki:
+-- Science pack names (Space Age):
 --   Nauvis:    automation-science-pack, logistic-science-pack, military-science-pack
 --   Vulcanus:  metallurgic-science-pack
 --   Gleba:     agricultural-science-pack
@@ -69,13 +69,13 @@ data:extend({
   },
 
   -- ════════════════════════════════════════════════════════════════════════
-  -- VULCANUS TIER
+  -- VULCANUS TIER — specialty: construction robot
   -- ════════════════════════════════════════════════════════════════════════
 
   {
     type = "technology",
     name = "pb-vulcanus-robotics",
-    icons = sprite_util.tech_icon(TECH_ICON, palettes.vulcanus),
+    icons = sprite_util.specialty_tech_icon(TECH_ICON, palettes.vulcanus),
     unit = {
       count = 100,
       ingredients = { { "metallurgic-science-pack", 1 } },
@@ -83,23 +83,18 @@ data:extend({
     },
     prerequisites = { "robotics" },
     effects = {
-      { type = "unlock-recipe", recipe = "pb-vulcanus-roboport-home" },
-      { type = "unlock-recipe", recipe = "pb-vulcanus-roboport-foreign" },
-      { type = "unlock-recipe", recipe = "pb-vulcanus-logistic-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-vulcanus-logistic-robot-foreign" },
-      { type = "unlock-recipe", recipe = "pb-vulcanus-construction-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-vulcanus-construction-robot-foreign" },
+      { type = "unlock-recipe", recipe = "pb-vulcanus-construction-robot" },
     },
   },
 
   -- ════════════════════════════════════════════════════════════════════════
-  -- GLEBA TIER
+  -- GLEBA TIER — specialty: compost chest
   -- ════════════════════════════════════════════════════════════════════════
 
   {
     type = "technology",
     name = "pb-gleba-robotics",
-    icons = sprite_util.tech_icon(TECH_ICON, palettes.gleba),
+    icons = sprite_util.specialty_tech_icon(TECH_ICON, palettes.gleba),
     unit = {
       count = 100,
       ingredients = { { "agricultural-science-pack", 1 } },
@@ -107,23 +102,18 @@ data:extend({
     },
     prerequisites = { "robotics" },
     effects = {
-      { type = "unlock-recipe", recipe = "pb-gleba-roboport-home" },
-      { type = "unlock-recipe", recipe = "pb-gleba-roboport-foreign" },
-      { type = "unlock-recipe", recipe = "pb-gleba-logistic-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-gleba-logistic-robot-foreign" },
-      { type = "unlock-recipe", recipe = "pb-gleba-construction-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-gleba-construction-robot-foreign" },
+      { type = "unlock-recipe", recipe = "pb-gleba-compost-chest" },
     },
   },
 
   -- ════════════════════════════════════════════════════════════════════════
-  -- FULGORA TIER
+  -- FULGORA TIER — specialty: logistic robot
   -- ════════════════════════════════════════════════════════════════════════
 
   {
     type = "technology",
     name = "pb-fulgora-robotics",
-    icons = sprite_util.tech_icon(TECH_ICON, palettes.fulgora),
+    icons = sprite_util.specialty_tech_icon(TECH_ICON, palettes.fulgora),
     unit = {
       count = 100,
       ingredients = { { "electromagnetic-science-pack", 1 } },
@@ -131,23 +121,18 @@ data:extend({
     },
     prerequisites = { "robotics" },
     effects = {
-      { type = "unlock-recipe", recipe = "pb-fulgora-roboport-home" },
-      { type = "unlock-recipe", recipe = "pb-fulgora-roboport-foreign" },
-      { type = "unlock-recipe", recipe = "pb-fulgora-logistic-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-fulgora-logistic-robot-foreign" },
-      { type = "unlock-recipe", recipe = "pb-fulgora-construction-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-fulgora-construction-robot-foreign" },
+      { type = "unlock-recipe", recipe = "pb-fulgora-logistic-robot" },
     },
   },
 
   -- ════════════════════════════════════════════════════════════════════════
-  -- AQUILO TIER
+  -- AQUILO TIER — specialty: roboport
   -- ════════════════════════════════════════════════════════════════════════
 
   {
     type = "technology",
     name = "pb-aquilo-robotics",
-    icons = sprite_util.tech_icon(TECH_ICON, palettes.aquilo),
+    icons = sprite_util.specialty_tech_icon(TECH_ICON, palettes.aquilo),
     unit = {
       count = 200,
       ingredients = { { "cryogenic-science-pack", 1 } },
@@ -155,12 +140,7 @@ data:extend({
     },
     prerequisites = { "robotics" },
     effects = {
-      { type = "unlock-recipe", recipe = "pb-aquilo-roboport-home" },
-      { type = "unlock-recipe", recipe = "pb-aquilo-roboport-foreign" },
-      { type = "unlock-recipe", recipe = "pb-aquilo-logistic-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-aquilo-logistic-robot-foreign" },
-      { type = "unlock-recipe", recipe = "pb-aquilo-construction-robot-home" },
-      { type = "unlock-recipe", recipe = "pb-aquilo-construction-robot-foreign" },
+      { type = "unlock-recipe", recipe = "pb-aquilo-roboport" },
     },
   },
 

@@ -1,70 +1,55 @@
 # Vulcanus
 
-## Identity
+## Specialty: Construction Bot
 
-High-payload robotics for dense industrial builds. Fewer trips, heavier hauls. Designed for foundry islands and smelter arrays where raw throughput matters more than speed or range.
+Vulcanus produces the best construction bot in the mod. **Payload = 3** — each bot carries three
+items to a ghost per trip. For large builds (walls, smelter rows, foundry floors, megabase
+blueprints) this is the single most impactful bot upgrade available. Fewer trips means faster
+completion, less charging congestion, and a smaller swarm needed to keep pace with big blueprint
+drops.
 
-The design tension is explicit: payload = 3 is a real advantage for bulk construction and logistics, but the 3× energy_per_move and hard speed cap make these bots expensive and slow. They only make sense inside compact, well-charged networks. Players who try to use them like vanilla bots — spread out, long routes — will find them frustrating. That friction is correct.
+These bots work anywhere. The logistical effort is in the supply chain: the recipe requires
+**tungsten plate and calcite**, which only come from Vulcanus. Once you have a Vulcanus supply
+line running to your crafting planet, you can equip every base in your network with them.
 
-**Primary lever:** `max_payload_size`. Everything else is a tradeoff against it.
+**Why Vulcanus?** The planet is defined by raw industrial throughput — foundries, smelters, bulk
+processing. A bot that carries 3× per trip is the mechanical expression of that. Building with
+Vulcanus bots feels like the planet itself is helping you build.
 
 ---
 
-## Roboport — Vulcanus Roboport
+## Stats
 
-**Entities:** `pb-vulcanus-roboport-home` / `pb-vulcanus-roboport-foreign`
-
-**Purpose:** Clear the charging queues that form in dense foundry hubs. High bot traffic in a small area creates charging congestion that vanilla roboports can't handle well — this port's 3× charging energy and 2× station count address that directly. Radius is unchanged; coverage is not the problem, throughput is.
-
-| Stat | Home | Foreign | Vanilla |
+| Stat | pb-vulcanus-construction-robot | Vanilla | Notes |
 |---|---|---|---|
-| Charging energy | 3,000 kW | 1,500 kW | 1,000 kW |
-| Charging stations | 8 | 6 | 4 |
-| Robot slots | 60 | 55 | 50 |
-| Logistics radius | 25 | 25 | 25 |
-| Construction radius | 55 | 55 | 55 |
-
-**Recipe gate:** vanilla roboport + tungsten plate + calcite.
-
----
-
-## Logistic Bot — Vulcanus Logistic Robot
-
-**Entities:** `pb-vulcanus-logistic-robot-home` / `pb-vulcanus-logistic-robot-foreign`
-
-**Purpose:** Bulk item movement inside compact networks — malls, foundries, smelting blocks. Three items per trip reduces the swarm size needed for high-volume delivery. Pairing with the Vulcanus Roboport's throughput is natural — the bots drain fast and need frequent short charges.
-
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Speed | 0.03 | 0.03 | 0.05 |
-| Max speed (hard cap) | 0.07 | 0.07 | — |
-| Max energy | 3 MJ | 2 MJ | 1.5 MJ |
-| Energy per move | 15 kJ | 15 kJ | 5 kJ |
-| Energy per tick | 4.5 kW | 4.5 kW | 3 kW |
-| Payload | **3** | **2** | 1 |
+| Speed | 0.05 | 0.06 | Slightly slower — the tradeoff for payload |
+| Max speed | 0.10 | — | Hard cap; dense hub routing |
+| Max energy | 3 MJ | 1.5 MJ | 2× battery |
+| Energy per move | 8 kJ | 5 kJ | 1.6× cost — manageable everywhere |
+| Energy per tick | 3 kW | 3 kW | Vanilla idle |
+| **Payload** | **3** | **1** | **The reason you're here** |
 
 ---
 
-## Construction Bot — Vulcanus Construction Robot
+## Recipe
 
-**Entities:** `pb-vulcanus-construction-robot-home` / `pb-vulcanus-construction-robot-foreign`
+**Item name:** `pb-vulcanus-construction-robot`
 
-**Purpose:** High-material builds — walls, smelter rows, foundry floors — completed in fewer bot-trips. Each bot carries 3 items to the ghost so a single pass places more before returning to recharge.
+**Ingredients:** construction-robot × 1 + tungsten-plate × 5 + calcite × 3 + steel-plate × 4
 
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Speed | 0.035 | 0.035 | 0.06 |
-| Max speed (hard cap) | 0.07 | 0.07 | — |
-| Max energy | 3 MJ | 2 MJ | 1.5 MJ |
-| Energy per move | 15 kJ | 15 kJ | 5 kJ |
-| Energy per tick | 4.5 kW | 4.5 kW | 3 kW |
-| Payload | **3** | **2** | 1 |
+No `surface_conditions`. Craftable anywhere. Requires a Vulcanus supply line for the tungsten
+and calcite.
+
+**Tech gate:** `pb-vulcanus-robotics` — requires metallurgic science pack.
 
 ---
 
-## Non-Home Variant
+## Roboport
 
-Foreign variants retain the hard speed cap and high energy cost — the tradeoff travels with the bot. Payload is reduced to 2 (still above vanilla). Useful off Vulcanus for dense hub layouts anywhere, but slow and energy-hungry on spread-out bases.
+Vulcanus does **not** produce a specialty roboport. Use Aquilo roboports as your network
+backbone, or vanilla roboports for local hubs.
 
-**On Fulgora:** no electric resistance — not lightning-safe.  
-**On Aquilo:** 15 kJ/move × 5× drain = 75 kJ effective per tile. Impractical.
+## Logistic Bot
+
+Vulcanus does **not** produce a specialty logistic bot. Use Fulgora logistic bots for your
+logistics layer.

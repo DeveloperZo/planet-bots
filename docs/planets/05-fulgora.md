@@ -1,78 +1,59 @@
 # Fulgora
 
-## Identity
+## Specialty: Logistic Bot
 
-Fast, lightning-hardened robotics. The storm rolls in and your bots don't care. This family solves two problems simultaneously: bots and ports that don't get deleted by lightning, and the fastest charging throughput in the mod to clear the backlog that builds up during a storm blackout.
+Fulgora produces the best logistic bot in the mod. **Fastest family, lightning-immune, deep
+battery for blackout survival.** These are the couriers that run your empire — fast enough that
+delivery latency stops being a bottleneck, and resilient enough to keep flying when the lights go
+out or a storm rolls in.
 
-Speed is the primary performance lever. Payload is deliberately low — this is a courier, not a hauler. The large battery on the home variant (~1100 tile range at full drain) is specifically for surviving a blackout mid-flight, not for general range.
+Payload stays at 1. This is a courier, not a hauler — Vulcanus handles bulk. What Fulgora gives
+you is speed and reliability. The 5 MJ battery exists specifically so a bot that launched during
+a power-stable window can complete its route through a full storm blackout without a charge stop.
 
-**Primary levers:** `speed` (fastest family) + `electric resistance` (100%) + `charging_energy` (6× vanilla burst).
+These bots work anywhere. The logistical effort is in the supply chain: the recipe requires
+**supercapacitors and holmium plate**, which only come from Fulgora.
 
-> **Lightning damage type:** Resistance entries are keyed by damage type name exactly. "electric" is used here. Validate against actual Space Age lightning damage type before shipping.
+**Why Fulgora?** The planet is defined by electrical extremes — constant lightning, huge capacitor
+banks, energy scarcity between strikes. A bot built here is hardened against everything the
+electromagnetic environment can throw at it. Ship these to every base and stop worrying about
+logistics latency or storm damage.
 
 ---
 
-## Roboport — Fulgora Roboport
+## Stats
 
-**Entities:** `pb-fulgora-roboport-home` / `pb-fulgora-roboport-foreign`
-
-**Purpose:** Keep bot infrastructure operational during storms and clear the post-storm charge queue fast. 100% electric resistance means the structure survives a lightning strike. 6× vanilla charging energy means when power comes back on, the charging backlog drains before the next storm hits.
-
-| Stat | Home | Foreign | Vanilla |
+| Stat | pb-fulgora-logistic-robot | Vanilla | Notes |
 |---|---|---|---|
-| Charging energy | **6,000 kW** | **3,000 kW** | 1,000 kW |
-| Charging stations | **10** | 7 | 4 |
-| Robot slots | 60 | 55 | 50 |
-| Logistics radius | 25 | 25 | 25 |
-| Construction radius | 55 | 55 | 55 |
-| Electric resistance | **100%** | **100%** | None |
-
-**Recipe gate:** vanilla roboport + supercapacitor + holmium plate.
-
----
-
-## Logistic Bot — Fulgora Logistic Robot
-
-**Entities:** `pb-fulgora-logistic-robot-home` / `pb-fulgora-logistic-robot-foreign`
-
-**Purpose:** Fast short-hop deliveries and burst resupply. Ammo to turrets during a raid, components to assemblers between storms, emergency top-offs. Not a bulk logistics bot — payload = 1 keeps it niche. The 5 MJ battery on the home variant exists specifically to survive flying through a blackout without a charge stop.
-
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Speed | **0.08** | **0.08** | 0.05 |
-| Max speed | **0.25** | **0.25** | — |
-| Max energy | 5 MJ | 3 MJ | 1.5 MJ |
-| Energy per move | 4 kJ | 4 kJ | 5 kJ |
-| Energy per tick | 3 kW | 3 kW | 3 kW |
-| Payload | 1 | 1 | 1 |
-| Electric resistance | **100%** | **100%** | None |
-| Min charge threshold | 12% | 12% | 20% |
+| **Speed** | **0.08** | 0.05 | **1.6× vanilla** |
+| Max speed | 0.25 | — | Fastest in mod |
+| Max energy | 5 MJ | 1.5 MJ | 3.3× — blackout range |
+| Energy per move | 4 kJ | 5 kJ | 0.8× vanilla — more efficient |
+| Energy per tick | 3 kW | 3 kW | Vanilla idle |
+| Payload | 1 | 1 | Courier, not hauler |
+| **Electric resistance** | **100%** | None | **Lightning-immune** |
+| Min charge threshold | 12% | 20% | Returns to charge later |
 
 ---
 
-## Construction Bot — Fulgora Construction Robot
+## Recipe
 
-**Entities:** `pb-fulgora-construction-robot-home` / `pb-fulgora-construction-robot-foreign`
+**Item name:** `pb-fulgora-logistic-robot`
 
-**Purpose:** Fast short-hop builds and rapid-response repairs in storm zones. Ghosts and damaged structures get addressed quickly because the bots move fast. Not suited for large builds requiring many trips — low payload and modest battery are the limiting factors there.
+**Ingredients:** logistic-robot × 1 + supercapacitor × 4 + holmium-plate × 3 + advanced-circuit × 6
 
-| Stat | Home | Foreign | Vanilla |
-|---|---|---|---|
-| Speed | **0.09** | **0.09** | 0.06 |
-| Max speed | **0.25** | **0.25** | — |
-| Max energy | 5 MJ | 3 MJ | 1.5 MJ |
-| Energy per move | 4 kJ | 4 kJ | 5 kJ |
-| Energy per tick | 3 kW | 3 kW | 3 kW |
-| Payload | 1 | 1 | 1 |
-| Electric resistance | **100%** | **100%** | None |
-| Min charge threshold | 12% | 12% | 20% |
+No `surface_conditions`. Craftable anywhere. Requires a Fulgora supply line for the
+supercapacitors and holmium plate.
+
+**Tech gate:** `pb-fulgora-robotics` — requires electromagnetic science pack.
 
 ---
 
-## Non-Home Variant
+## Roboport
 
-Foreign variants retain full speed and electric immunity — the two core identity stats travel with the bot. Battery is reduced (3 MJ vs 5 MJ). Still the fastest family off-planet and still lightning-safe. Consistent with Space Age's "exported tech can be good everywhere" philosophy.
+Fulgora does **not** produce a specialty roboport. Use Aquilo roboports as your network backbone.
 
-**On Vulcanus:** speed advantage is less meaningful vs. payload bots for dense hub work.  
-**On Gleba:** viable but not optimal — endurance bots suit large persistent swarms better.  
-**On Aquilo:** 5× drain degrades effective range significantly even with the 3 MJ battery.
+## Construction Bot
+
+Fulgora does **not** produce a specialty construction bot. Use Vulcanus construction bots for
+large builds.
