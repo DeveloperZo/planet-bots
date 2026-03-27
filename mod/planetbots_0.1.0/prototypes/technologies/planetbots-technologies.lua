@@ -134,11 +134,14 @@ data:extend({
     name = "pb-aquilo-robotics",
     icons = sprite_util.specialty_tech_icon(TECH_ICON, palettes.aquilo),
     unit = {
-      count = 200,
+      -- count=300: capstone item (best roboport) should cost more than vanilla robotics (200)
+      count = 300,
       ingredients = { { "cryogenic-science-pack", 1 } },
       time = 60,
     },
-    prerequisites = { "robotics" },
+    -- Requires all three other planet specialties: Aquilo is the earned capstone.
+    -- Visually encodes the progression: bots ── > roboport infrastructure.
+    prerequisites = { "robotics", "pb-vulcanus-robotics", "pb-fulgora-robotics", "pb-gleba-robotics" },
     effects = {
       { type = "unlock-recipe", recipe = "pb-aquilo-roboport" },
     },

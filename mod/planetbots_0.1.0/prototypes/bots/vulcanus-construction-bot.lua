@@ -1,15 +1,29 @@
 -- prototypes/bots/vulcanus-construction-bot.lua
--- Vulcanus specialty: construction robot with payload = 3.
--- The best construction bot in the mod. Three items per ghost per trip — for large
--- builds (megabase blueprints, smelter rows, wall sections) this cuts completion
--- time dramatically. The tradeoff: slightly slower than vanilla and 1.6x energy_per_move,
--- meaning range is shorter in energy-sparse grids. Pair with Aquilo roboports.
+-- Vulcanus specialty: fastest construction robot in the mod.
 --
--- Craftable anywhere — the gate is the supply chain: tungsten-plate and calcite
--- must be shipped from Vulcanus.
+-- MECHANICS (what actually moves the needle for blueprint building):
+--   1. speed                         — flight time per ghost trip. The primary lever.
+--   2. range (max_energy/energy_per_move) — how far from a roboport the bot can work.
+--   3. speed_multiplier_when_out_of_energy — the "volcanic sprint" identity stat (see below).
+--
+-- max_payload_size does NOT affect ghost-building: each bot handles exactly 1 ghost per trip.
+-- Payload only helps deconstruction (collecting items). Kept at 3 for that use case.
+--
+-- VOLCANIC SPRINT (depth mechanic):
+--   When energy drops below min_to_charge (25% of 5MJ = 1.25MJ), the bot enters
+--   overclock mode: speed_multiplier_when_out_of_energy = 1.5 → effective speed 0.15.
+--   Vanilla bots in the same state crawl at 0.25× speed (punished). Vulcanus bots sprint.
+--
+--   Design reward: intentionally spacing roboports further apart on a perimeter is valid
+--   strategy. Bots run low mid-crossing, overclock for the final dash to the ghost and
+--   the sprint back to the roboport. Round-trip time at low energy is SHORTER than at
+--   normal energy for a vanilla bot. Perimeter building has depth, not just cost.
+--
+-- Craftable anywhere — gate is the supply chain: tungsten-plate and calcite from Vulcanus.
 --
 -- Vanilla construction baseline:
---   speed=0.06, max_energy=1.5MJ, energy_per_move=5kJ, energy_per_tick=3kW, payload=1
+--   speed=0.06, max_energy=3MJ, energy_per_move=5kJ, energy_per_tick=0.05kJ, payload=1
+--   speed_multiplier_when_out_of_energy=0.25 (punishing)
 
 local palettes    = require("prototypes.shared.palettes")
 local sprite_util = require("prototypes.shared.sprite-util")
@@ -44,18 +58,22 @@ data:extend({
     max_health                          = 100,
     collision_box                       = {{0, 0}, {0, 0}},
     selection_box                       = {{ -0.5, -0.5 }, { 0.5, 0.5 }},
-    -- ── PRIMARY LEVER ─────────────────────────────────────────────────────
-    max_payload_size                    = 3,      -- 3x vanilla; each trip to a ghost places 3 items
-    -- ── TRADEOFFS ─────────────────────────────────────────────────────────
-    speed                               = 0.05,   -- slightly below vanilla 0.06 — the price of payload
-    max_speed                           = 0.10,   -- hard cap; not a speed bot
-    max_energy                          = "3MJ",  -- 2x vanilla battery
-    energy_per_move                     = "8kJ",  -- 1.6x vanilla; range shorter than vanilla in sparse grids
+    -- ── SPEED ─────────────────────────────────────────────────────────────
+    speed                               = 0.10,   -- 1.67× vanilla 0.06 — faster on every blueprint
+    max_speed                           = 0.20,   -- research cap; accommodates 0.15 sprint too
+    -- ── DECONSTRUCTION BONUS ──────────────────────────────────────────────
+    max_payload_size                    = 3,      -- 3× vanilla; items swept per deconstruction trip
+    -- ── ENERGY / RANGE ────────────────────────────────────────────────────
+    max_energy                          = "5MJ",  -- 625-tile range at 8kJ/tile; funds sprint reserve
+    energy_per_move                     = "8kJ",  -- 1.6× vanilla; shorter uninterrupted range
     energy_per_tick                     = "3kW",  -- vanilla idle drain
-    -- ── STANDARD ──────────────────────────────────────────────────────────
-    min_to_charge                       = 0.2,
+    -- ── VOLCANIC SPRINT ───────────────────────────────────────────────────
+    -- energy < 25% → overclock at 1.5× base speed (0.15 effective).
+    -- Vanilla at same state = 0.25× (crawls). This bot sprints.
+    -- Wider roboport spacing on perimeters is a valid strategy, not a mistake.
+    min_to_charge                       = 0.25,  -- overclock triggers at 25% (vs vanilla 20%)
     max_to_charge                       = 0.95,
-    speed_multiplier_when_out_of_energy = 0.25,
+    speed_multiplier_when_out_of_energy = 1.5,   -- 1.5× base = 0.15 sprint (vs vanilla 0.25×)
     resistances                         = {},
     construction_vector                 = { 0, 0.2 },
   }

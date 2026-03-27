@@ -56,6 +56,10 @@ function depot_cap.check_and_enforce(entity)
     if player and player.valid then
       player.print({ "pb-msg.depot-cap-reached", cap })
       player.insert({ name = "pb-field-drone-depot", count = 1 })
+    else
+      -- Robot-built over cap: spill item near the position so bots can recollect
+      entity.surface.spill_item_stack(
+        entity.position, { name = "pb-field-drone-depot", count = 1 }, true)
     end
     entity.destroy({ raise_destroy = false })
     return true
@@ -70,7 +74,12 @@ function depot_cap.on_research_finished(event)
   if not new_cap then return end
 
   local force = tech.force
-  storage.depot_caps[force.index] = new_cap
+  -- math.max prevents regression if research events arrive out of order
+  -- (e.g. /c force.research_all_technologies() fires events in prototype order)
+  storage.depot_caps[force.index] = math.max(
+    storage.depot_caps[force.index] or 1,
+    new_cap
+  )
 end
 
 return depot_cap

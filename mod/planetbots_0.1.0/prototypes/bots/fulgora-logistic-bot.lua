@@ -3,14 +3,29 @@
 -- The mod's premier logistics bot. Speed = 0.08 (1.6x vanilla), max_speed = 0.25.
 -- 5 MJ battery survives a full storm blackout mid-flight without a charge stop.
 -- Electric resistance = 100%: immune to lightning strikes and tesla turret fire.
--- Payload = 1 intentionally — this is a fast courier, not a bulk hauler.
 -- True lightning immunity also enforced at runtime via scripts/fulgora-hardening.lua.
+--
+-- Hidden depth (supercapacitor courier — not obvious from “fast bot” alone):
+--   • energy_per_move LOWER than vanilla — long flights are cheap per tile; they are
+--     long-haul couriers, not just “faster vanilla.”
+--   • energy_per_tick HIGHER than vanilla — self-discharge / active stabilization; heavy
+--     bot traffic and long hover queues burn disproportionate power vs vanilla bots.
+--   • max_to_charge LOWER than vanilla — they park without insisting on a full top-off,
+--     freeing roboport charge pads sooner under saturation (snappier network, more
+--     recharge cycles when everyone is busy).
+--   • min_to_charge LOWER than vanilla — runs the pack deeper before mandatory charge runs;
+--     pairs with 5 MJ so blackouts still work, but empty-bot limp is harsher.
+--   • speed_multiplier_when_out_of_energy LOWER than vanilla — when drained, they crawl;
+--     rewards keeping a buffer and punishes starving the network.
+--   • max_payload_size_after_bonus — caps worker-robot cargo research at 3 stacks (vanilla
+--     logistic bots reach 4). Endgame bulk hauls stay on standard bots; Fulgora stays a courier.
 --
 -- Craftable anywhere — gate is the supply chain: supercapacitor and holmium-plate
 -- must be shipped from Fulgora.
 --
 -- Vanilla logistic baseline:
 --   speed=0.05, max_energy=1.5MJ, energy_per_move=5kJ, energy_per_tick=3kW, payload=1
+--   min_to_charge=0.2, max_to_charge=0.95, speed_multiplier_when_out_of_energy=0.25
 
 local palettes    = require("prototypes.shared.palettes")
 local sprite_util = require("prototypes.shared.sprite-util")
@@ -52,14 +67,15 @@ data:extend({
     -- Runtime script (fulgora-hardening.lua) cancels actual lightning damage
     -- using on_entity_damaged, since lightning is raw double with no type filter.
     resistances = { { type = "electric", percent = 100 } },
-    -- ── TRADEOFFS ─────────────────────────────────────────────────────────
-    energy_per_move                     = "4kJ",  -- slightly better than vanilla 5kJ
-    energy_per_tick                     = "3kW",  -- vanilla idle drain
-    max_payload_size                    = 1,      -- courier, not hauler
-    -- ── STANDARD ──────────────────────────────────────────────────────────
-    min_to_charge                       = 0.12,   -- deep discharge; maximises blackout survival
-    max_to_charge                       = 0.95,
-    speed_multiplier_when_out_of_energy = 0.25,
+    -- ── TRADEOFFS (supercap courier — see file header) ───────────────────
+    energy_per_move                     = "3kJ",  -- long-haul efficient vs vanilla 5kJ
+    energy_per_tick                     = "6kW",  -- 2× vanilla — congestion / hover tax
+    max_payload_size                    = 1,
+    max_payload_size_after_bonus      = 3,       -- cargo research caps at 3 (vanilla bots → 4)
+    -- ── CHARGE + EMPTY BEHAVIOUR ──────────────────────────────────────────
+    min_to_charge                       = 0.09,   -- deeper reserve than vanilla 0.2
+    max_to_charge                       = 0.78,   -- park without full top-off; snappier pads
+    speed_multiplier_when_out_of_energy = 0.2,    -- harsher limp than vanilla 0.25
     cargo_centered                      = { 0, 0.2 },
   }
 })

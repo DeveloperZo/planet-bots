@@ -22,7 +22,7 @@ local NAUVIS_ONLY = {
 }
 
 function placement.on_built(event)
-  local entity = event.entity or event.created_entity
+  local entity = event.entity  -- Factorio 2.0: all build events use event.entity
   if not (entity and entity.valid) then return end
 
   -- Depot cap check runs first — destroys entity and returns item if cap exceeded.
@@ -34,6 +34,10 @@ function placement.on_built(event)
     local last_user = entity.last_user
     if last_user and last_user.valid then
       last_user.insert({ name = return_item, count = 1 })
+    else
+      -- Robot-built or script-placed: spill near the position so bots can recollect
+      entity.surface.spill_item_stack(
+        entity.position, { name = return_item, count = 1 }, true)
     end
     entity.destroy()
     return

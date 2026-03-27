@@ -33,9 +33,11 @@ data:extend({
       { icon = ICON_BASE,  icon_size = 64 },
       { icon = ICON_BADGE, icon_size = 64, scale = 0.4, shift = { 8, 8 }, tint = tint },
     },
-    picture       = sprite_util.tinted_copy(vanilla.picture, tint),
-    collision_box = {{ -0.85, -0.85 }, { 0.85, 0.85 }},
-    selection_box = {{ -1, -1 }, { 1, 1 }},
+    picture              = sprite_util.tinted_copy(vanilla.picture, tint),
+    -- Match vanilla iron-chest footprint exactly: 1×1 tile, same as wooden/iron/steel chest
+    collision_box        = {{ -0.35, -0.35 }, { 0.35, 0.35 }},
+    selection_box        = {{ -0.5, -0.5 }, { 0.5, 0.5 }},
+    fast_replaceable_group = "container",
     -- 30 slots: slot 1 = nutrient fuel (locked by script), slots 2-30 = storage.
     -- quality_affects_inventory_size scales this with quality tiers.
     inventory_size              = 30,

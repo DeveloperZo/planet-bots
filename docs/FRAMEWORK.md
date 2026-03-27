@@ -134,6 +134,73 @@ Each specialty recipe requires:
 
 ---
 
+## Planet environment levers (specialty-scoped)
+
+**Design rule:** Planet identity — “what this world does to your automation” — is expressed on **that
+planet’s specialty prototype only** (`pb-*` construction bot, logistic bot, roboport, compost chest,
+or field-drone tier). When we talk about a **planet multiplier** or environmental lever in docs or
+balance, we mean **fields on that one entity** (or its paired script), not a hidden blanket modifier
+on vanilla robots.
+
+**Vanilla engine caveat (Aquilo):** Space Age applies a **global** flying-robot energy penalty on the
+Aquilo surface to **all** logistic and construction robots, including vanilla. PlanetBots does not
+override that. Our scoped lever is **`pb-aquilo-roboport`**: higher `charging_energy`, more
+`charging_station_count`, and larger `robot_slots_count` so networks can **compensate** for the
+global drain. We do **not** document an extra “Aquilo tax” that applies only to e.g.
+`pb-fulgora-logistic-robot` — that would stack on top of the engine rule and confuse the model.
+
+**Pairing summary**
+
+| Planet              | Specialty prototype              | Type     | Where planet identity lives |
+| ------------------- | -------------------------------- | -------- | --------------------------- |
+| Nauvis (pre-vanilla)| `pb-field-drone-home`, depot     | Drone    | Drone + depot prototypes + depot-cap script |
+| Vulcanus          | `pb-vulcanus-construction-robot` | Bot      | Construction-robot fields   |
+| Fulgora           | `pb-fulgora-logistic-robot`      | Bot      | Logistic-robot fields + `fulgora-hardening.lua` |
+| Gleba             | `pb-gleba-compost-chest`         | Chest    | Chest prototype + `compost-chest.lua` |
+| Aquilo            | `pb-aquilo-roboport`             | Roboport | Roboport fields (offsets vanilla global bot drain on Aquilo) |
+
+---
+
+### Bot levers (flying / logistics — same field names)
+
+Use these on **`logistic-robot`** or **`construction-robot`** specialty entities. Optional fields
+omitted unless the design needs them.
+
+**Motion and energy**
+
+- `speed`, `max_speed`
+- `max_energy`
+- `energy_per_move`, `energy_per_tick`
+- `min_to_charge`, `max_to_charge`
+- `speed_multiplier_when_out_of_energy`
+
+**Cargo (logistic bots)**
+
+- `max_payload_size`, `max_payload_size_after_bonus`, `draw_cargo`
+
+**Other bot-relevant**
+
+- `destroy_action`, `charging_sound`
+- `max_health`, `resistances` (and other `EntityWithHealthPrototype` fields as needed)
+
+---
+
+### Roboport levers (when the specialty is a roboport)
+
+Use on **`pb-aquilo-roboport`** (or field depot): `charging_energy`, `charging_station_count`,
+`robot_slots_count`, `material_slots_count`, `energy_source`, `energy_usage`, `logistics_radius`,
+`construction_radius`, resistances, slot/animation fields as needed. **Design rule:** keep
+logistics/construction radius aligned with vanilla unless a milestone explicitly changes it.
+
+---
+
+### Non-bot specialty levers
+
+- **Compost chest (`pb-gleba-compost-chest`):** spoilage multipliers, fuel consumption, slot rules —
+  see [milestones/02-planet-chests/compost-chest-design.md](milestones/02-planet-chests/compost-chest-design.md).
+
+---
+
 ## Specialty Stats
 
 ### Construction Bot — pb-vulcanus-construction-robot
@@ -153,19 +220,22 @@ Vanilla baseline: speed 0.06, max_energy 1.5 MJ, energy_per_move 5 kJ, energy_pe
 
 ### Logistic Bot — pb-fulgora-logistic-robot
 
-Vanilla baseline: speed 0.05, max_energy 1.5 MJ, energy_per_move 5 kJ, energy_per_tick 3 kW, payload 1.
+Vanilla baseline: speed 0.05, max_energy 1.5 MJ, energy_per_move 5 kJ, energy_per_tick 3 kW, payload 1. Charge: min_to_charge 0.2, max_to_charge 0.95, speed_multiplier_when_out_of_energy 0.25.
 
 
-| Stat                 | pb-fulgora | Vanilla | Notes                    |
-| -------------------- | ---------- | ------- | ------------------------ |
-| **Speed**            | **0.08**   | 0.05    | **1.6× — primary lever** |
-| Max speed            | 0.25       | —       | Fastest in mod           |
-| Max energy           | 5 MJ       | 1.5 MJ  | 3.3× — blackout survival |
-| Energy per move      | 4 kJ       | 5 kJ    | More efficient           |
-| Energy per tick      | 3 kW       | 3 kW    | Vanilla idle             |
-| Payload              | 1          | 1       | Courier, not hauler      |
-| Electric resistance  | 100%       | None    | Lightning-immune         |
-| Min charge threshold | 12%        | 20%     | Returns to charge later  |
+| Stat                      | pb-fulgora | Vanilla | Notes                                      |
+| ------------------------- | ---------- | ------- | ------------------------------------------ |
+| **Speed**                 | **0.08**   | 0.05    | **1.6× — primary lever**                   |
+| Max speed                 | 0.25       | —       | Fastest in mod                             |
+| Max energy                | 5 MJ       | 1.5 MJ  | 3.3× — blackout survival                   |
+| Energy per move           | 3 kJ       | 5 kJ    | Long-haul efficient                        |
+| Energy per tick           | 6 kW       | 3 kW    | Higher hover / queue drain                 |
+| Payload                   | 1          | 1       | Courier base                               |
+| Max payload w/ research | **3**      | **4**   | `max_payload_size_after_bonus` courier cap |
+| Electric resistance       | 100%       | None    | Lightning-immune                           |
+| Min charge threshold      | 9%         | 20%     | Deeper discharge before seeking charge     |
+| Max charge (park)         | 78%        | 95%     | Partial top-off — snappier roboport churn  |
+| Speed mult. when empty    | 0.2        | 0.25    | Harsher limp-home                          |
 
 
 ### Roboport — pb-aquilo-roboport

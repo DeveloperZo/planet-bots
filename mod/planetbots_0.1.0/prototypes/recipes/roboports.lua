@@ -33,7 +33,7 @@ data:extend({
       { type = "item", name = "roboport",          amount = 1  },
       { type = "item", name = "lithium-plate",     amount = 6  },  -- TODO: tune in balance pass
       { type = "item", name = "quantum-processor", amount = 4  },  -- TODO: tune in balance pass
-      { type = "item", name = "ice-platform",      amount = 8  },  -- TODO: verify item name at runtime; tune in balance pass
+      { type = "item", name = "ice-platform",      amount = 8  },  -- VERIFY IN-GAME: "ice-platform" unconfirmed; check /editor or data-raw-dump if recipe fails to load
     },
     results         = {{ type = "item", name = "pb-aquilo-roboport", amount = 1 }},
     energy_required = 15,
