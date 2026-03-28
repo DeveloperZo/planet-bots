@@ -1,23 +1,21 @@
 -- scripts/depot-cap.lua
--- Enforces a per-force cap on Field Drone Depots AND Field Chests (shared cap).
--- Cap starts at 3 and increases via research up to 14.
--- After that, vanilla robotics is available and the cap becomes irrelevant.
+-- Enforces a per-force cap on Field Drone Depots.
+-- Chests are not capped here; they are limited to 1 per depot area by
+-- placement.lua instead.
+-- Cap starts at 1 and increases via research up to 5.
 
 local depot_cap = {}
 
+local DEPOT_NAME = "pb-field-drone-depot"
+
 local RESEARCH_CAPS = {
-  ["pb-field-depot-capacity-1"] = 5,
-  ["pb-field-depot-capacity-2"] = 7,
-  ["pb-field-depot-capacity-3"] = 10,
-  ["pb-field-depot-capacity-4"] = 14,
+  ["pb-field-depot-capacity-1"] = 2,
+  ["pb-field-depot-capacity-2"] = 3,
+  ["pb-field-depot-capacity-3"] = 4,
+  ["pb-field-depot-capacity-4"] = 5,
 }
 
-local DEFAULT_CAP = 3
-
-local CAPPED_ENTITIES = {
-  ["pb-field-drone-depot"] = "pb-field-drone-depot",
-  ["pb-field-chest"]       = "pb-field-chest",
-}
+local DEFAULT_CAP = 1
 
 function depot_cap.init()
   storage.depot_caps = storage.depot_caps or {}
@@ -32,33 +30,30 @@ local function get_cap(force)
   return storage.depot_caps[force.index] or DEFAULT_CAP
 end
 
-local function count_capped_entities(force)
+local function count_depots(force)
   local count = 0
   for _, surface in pairs(game.surfaces) do
-    for entity_name, _ in pairs(CAPPED_ENTITIES) do
-      local found = surface.find_entities_filtered({ name = entity_name, force = force })
-      count = count + #found
-    end
+    local found = surface.find_entities_filtered({ name = DEPOT_NAME, force = force })
+    count = count + #found
   end
   return count
 end
 
 function depot_cap.check_and_enforce(entity)
-  local return_item = CAPPED_ENTITIES[entity.name]
-  if not return_item then return false end
+  if entity.name ~= DEPOT_NAME then return false end
 
   local force   = entity.force
   local cap     = get_cap(force)
-  local current = count_capped_entities(force)
+  local current = count_depots(force)
 
   if current > cap then
     local player = entity.last_user
     if player and player.valid then
       player.print({ "pb-msg.depot-cap-reached", cap })
-      player.insert({ name = return_item, count = 1 })
+      player.insert({ name = DEPOT_NAME, count = 1 })
     else
       entity.surface.spill_item_stack(
-        entity.position, { name = return_item, count = 1 }, true)
+        entity.position, { name = DEPOT_NAME, count = 1 }, true)
     end
     entity.destroy({ raise_destroy = false })
     return true

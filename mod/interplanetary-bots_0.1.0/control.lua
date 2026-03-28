@@ -2,8 +2,8 @@
 -- Runtime scripting for Interplanetary Bots.
 --
 -- Responsibilities:
---   1. Field Drone Depot: placement checks (Nauvis-only, shared cap), scripted
---      builder loop (on_nth_tick), depot entity tracking.
+--   1. Field Drone Depot: placement checks (Nauvis-only, depot cap, 1:1 chest
+--      pairing), scripted builder loop (on_nth_tick), depot entity tracking.
 --   2. Fulgora logistic bot: electric damage hardening (lightning immunity).
 --
 -- IMPORTANT — single handler per event rule:
@@ -47,7 +47,10 @@ script.on_event(defines.events.script_raised_destroy,   on_remove)
 
 -- ── Research ────────────────────────────────────────────────────────────────
 
-script.on_event(defines.events.on_research_finished, depot_cap.on_research_finished)
+script.on_event(defines.events.on_research_finished, function(event)
+  depot_cap.on_research_finished(event)
+  builder.on_research_finished(event)
+end)
 
 -- ── Damage ──────────────────────────────────────────────────────────────────
 

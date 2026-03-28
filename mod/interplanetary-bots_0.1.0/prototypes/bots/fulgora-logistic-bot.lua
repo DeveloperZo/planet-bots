@@ -79,6 +79,5 @@ data:extend({
     min_to_charge                       = s("pb-fulgora-lbot-min-to-charge"),
     max_to_charge                       = s("pb-fulgora-lbot-max-to-charge"),
     speed_multiplier_when_out_of_energy = s("pb-fulgora-lbot-speed-when-empty"),
-    cargo_centered                      = { 0, 0.2 },
   }
 })

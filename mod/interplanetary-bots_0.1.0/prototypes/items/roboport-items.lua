@@ -26,6 +26,16 @@ data:extend({
     subgroup     = "pb-roboports",
     order        = "a-pb-chest",
   },
+  {
+    type         = "repair-tool",
+    name         = "pb-field-charge",
+    speed        = 1,
+    durability   = 1,
+    icons        = sprite_util.planet_icon("__base__/graphics/icons/repair-pack.png", palettes.field_drone),
+    stack_size   = 100,
+    subgroup     = "pb-roboports",
+    order        = "a-pb-charge",
+  },
 
   -- ── Aquilo specialty: roboport ────────────────────────────────────────────
   {

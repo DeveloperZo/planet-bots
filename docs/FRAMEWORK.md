@@ -50,8 +50,8 @@ planetbots/
         ├── control.lua
         ├── settings.lua
         ├── scripts/
-        │   ├── placement.lua          — Nauvis-only block + shared depot/chest cap
-        │   ├── depot-cap.lua          — per-force cap (depots + chests)
+        │   ├── placement.lua          — Nauvis-only block, depot cap, 1:1 chest pairing
+        │   ├── depot-cap.lua          — per-force depot cap (1→5 via research)
         │   ├── field-drone-builder.lua — scripted ghost builder (on_nth_tick)
         │   └── fulgora-hardening.lua  — electric damage immunity
         ├── prototypes/
@@ -60,7 +60,7 @@ planetbots/
         │   │   └── sprite-util.lua    — tinted copy / icon helpers
         │   ├── items/
         │   │   ├── item-groups.lua
-        │   │   ├── roboport-items.lua — depot, field chest, Aquilo roboport
+        │   │   ├── roboport-items.lua — depot, field chest, field charge, Aquilo roboport
         │   │   └── bot-items.lua      — Vulcanus construction, Fulgora logistic
         │   ├── entities/
         │   │   ├── field-drone-depot.lua
@@ -70,7 +70,7 @@ planetbots/
         │   │   ├── vulcanus-construction-bot.lua (in bots/)
         │   │   └── fulgora-logistic-bot.lua (in bots/)
         │   ├── recipes/
-        │   │   ├── roboports.lua      — depot, field chest, Aquilo roboport
+        │   │   ├── roboports.lua      — depot, field chest, field charge, Aquilo roboport
         │   │   └── bots.lua           — Vulcanus construction, Fulgora logistic
         │   └── technologies/
         │       └── planetbots-technologies.lua
@@ -153,7 +153,7 @@ global drain. We do **not** document an extra “Aquilo tax” that applies only
 
 | Planet              | Specialty prototype              | Type     | Where planet identity lives |
 | ------------------- | -------------------------------- | -------- | --------------------------- |
-| Nauvis (pre-vanilla)| `pb-field-drone-depot` + `pb-field-chest` | Scripted builder | Depot (roboport for radius) + chest (container) + `field-drone-builder.lua` |
+| Nauvis (pre-vanilla)| `pb-field-drone-depot` + `pb-field-chest` + `pb-field-charge` | Scripted builder | Depot (roboport) + 1:1 paired chest + field charges (ammo) + `field-drone-builder.lua` |
 | Vulcanus          | `pb-vulcanus-construction-robot` | Bot      | Construction-robot fields   |
 | Fulgora           | `pb-fulgora-logistic-robot`      | Bot      | Logistic-robot fields + `fulgora-hardening.lua` |
 | Gleba             | —                                | —        | *(undecided — see `docs/planets/04-gleba.md`)*  |
@@ -249,8 +249,9 @@ Vanilla baseline: charging_energy 1,000 kW, charging_stations 4, robot_slots 50.
 ## Research Tree
 
 ```
-automation => pb-field-drones (depot + chest)
-               └=> pb-field-depot-capacity-1 => -2 => -3 => -4  (shared cap)
+automation => pb-field-drones (depot + chest + field charge)
+               └=> pb-field-depot-capacity-1 (2 depots)
+                    └=> -2 (3) => -3 (4) => -4 (5 + player inventory source)
 
 robotics => pb-vulcanus-robotics   (metallurgic science pack)       => pb-vulcanus-construction-robot
 robotics => pb-fulgora-robotics    (electromagnetic science pack)   => pb-fulgora-logistic-robot
@@ -260,8 +261,13 @@ robotics => pb-aquilo-robotics     (cryogenic science pack)         => pb-aquilo
 
 Each planet technology unlocks **one recipe** for its specialty item (Gleba: TBD).
 
+**Depot cap progression:** Base 1 → capacity-1: 2 → capacity-2: 3 → capacity-3: 4 → capacity-4: 5.
+Each depot can have exactly 1 Field Chest (enforced at placement). After capacity-4, the depot
+can also pull items from player inventory when the player is within range.
+
 Technology names `pb-field-depot-capacity-1` through `pb-field-depot-capacity-4` are
-**referenced by name in scripts/depot-cap.lua**. Do not rename without updating the script.
+**referenced by name in scripts/depot-cap.lua and field-drone-builder.lua**. Do not rename
+without updating both scripts.
 
 ---
 
@@ -272,9 +278,12 @@ Technology names `pb-field-depot-capacity-1` through `pb-field-depot-capacity-4`
 | ---------------------------------- | ------------------------------ | --------------------------------------- |
 | Field Drone Depot off-Nauvis block | `scripts/placement.lua`           | Done                                    |
 | Field Chest off-Nauvis block       | `scripts/placement.lua`           | Done                                    |
-| Shared depot/chest cap enforcement | `scripts/depot-cap.lua`           | Done                                    |
+| Chest 1:1 pairing (in depot range) | `scripts/placement.lua`          | Done                                    |
+| Depot cap enforcement (depot-only) | `scripts/depot-cap.lua`           | Done                                    |
 | Cap research upgrades              | `scripts/depot-cap.lua`           | Done                                    |
 | Scripted ghost builder             | `scripts/field-drone-builder.lua` | Done                                    |
+| Player inventory source (final research) | `scripts/field-drone-builder.lua` | Done                              |
+| Depot "no chest" alert             | `scripts/field-drone-builder.lua` | Done                                    |
 | Depot entity tracking              | `control.lua` + builder script    | Done                                    |
 | Cargo pod variant normalization    | `on_cargo_pod_delivered_cargo`    | TODO (lower priority — no variants now) |
 

@@ -1,12 +1,11 @@
 -- prototypes/entities/field-chest.lua
 -- Material storage chest for the Field Drone Depot scripted builder.
--- Place within depot construction radius. The builder script pulls ghost
--- ingredients from Field Chests. Shares placement cap with depots.
+-- Must be placed within a depot's construction radius (1 per depot).
+-- The builder script pulls ghost ingredients from the paired Field Chest.
 -- Nauvis only (placement.lua blocks off-Nauvis).
 
 local palettes    = require("prototypes.shared.palettes")
 local sprite_util = require("prototypes.shared.sprite-util")
-local util        = require("util")
 
 local tint    = palettes.field_drone
 local vanilla = data.raw["container"]["iron-chest"]

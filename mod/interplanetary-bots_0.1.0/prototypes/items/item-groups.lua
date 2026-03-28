@@ -1,6 +1,5 @@
 -- prototypes/items/item-groups.lua
--- Custom item subgroup for Interplanetary Bots repair packs.
--- Required by: prototypes/items/repair-packs.lua
+-- Custom item subgroups for Interplanetary Bots.
 
 data:extend({
   {

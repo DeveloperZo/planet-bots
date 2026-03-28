@@ -1,13 +1,13 @@
 -- prototypes/entities/field-drone-depot.lua
 -- Pre-vanilla Nauvis scripted builder. No real robots — construction is handled
--- by scripts/field-drone-builder.lua consuming repair packs (ammo from material
--- slots) and ghost ingredients (from nearby Field Chests).
+-- by scripts/field-drone-builder.lua consuming Field Charges (ammo from material
+-- slots) and ghost ingredients (from the paired Field Chest).
 --
 -- Key constraints:
 --   - logistics_radius = 1 (functionally zero — no logistics network area)
 --   - construction_radius = 30 (build zone for the scripted builder)
 --   - robot_slots_count = 0 (no real bots)
---   - material_slots_count = 4 (holds repair packs — the build ammo)
+--   - material_slots_count = 4 (holds Field Charges — the build ammo)
 --   - Hard cap per force enforced at runtime by scripts/depot-cap.lua
 --   - Cannot be placed off Nauvis (placement.lua returns item if attempted)
 
@@ -37,6 +37,7 @@ local function make_depot(name, params)
     request_to_open_door_timeout = vanilla.request_to_open_door_timeout,
     spawn_and_station_height     = vanilla.spawn_and_station_height,
     charge_approach_distance     = vanilla.charge_approach_distance,
+    max_health                   = 300,
     collision_box                = {{ -2.0, -2.0 }, { 2.0, 2.0 }},
     selection_box                = {{ -2.0, -2.0 }, { 2.0, 2.0 }},
     -- ── PRIMARY LEVERS ────────────────────────────────────────────────────
@@ -45,7 +46,7 @@ local function make_depot(name, params)
     charging_energy              = "1kW",  -- minimal; no real bots to charge
     charging_station_count       = 0,
     robot_slots_count            = 0,      -- no real bots; building is scripted
-    material_slots_count         = 4,      -- holds repair packs (build ammo)
+    material_slots_count         = 4,      -- holds Field Charges (build ammo)
     -- Energy
     energy_source = {
       type             = "electric",

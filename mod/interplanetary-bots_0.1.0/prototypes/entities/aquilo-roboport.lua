@@ -44,6 +44,7 @@ data:extend({
     request_to_open_door_timeout = vanilla.request_to_open_door_timeout,
     spawn_and_station_height     = vanilla.spawn_and_station_height,
     charge_approach_distance     = vanilla.charge_approach_distance,
+    max_health                   = 500,
     collision_box                = {{ -2.0, -2.0 }, { 2.0, 2.0 }},
     selection_box                = {{ -2.0, -2.0 }, { 2.0, 2.0 }},
     -- Network coverage — vanilla values; radius is not a design lever

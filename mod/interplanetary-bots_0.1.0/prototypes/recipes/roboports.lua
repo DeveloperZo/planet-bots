@@ -33,6 +33,17 @@ data:extend({
     results         = {{ type = "item", name = "pb-field-chest", amount = 1 }},
     energy_required = 1,
   },
+  {
+    type            = "recipe",
+    name            = "pb-field-charge",
+    enabled         = false,
+    ingredients     = {
+      { type = "item", name = "iron-gear-wheel",   amount = 1 },
+      { type = "item", name = "electronic-circuit", amount = 1 },
+    },
+    results         = {{ type = "item", name = "pb-field-charge", amount = 8 }},
+    energy_required = 2,
+  },
 
   -- ── Aquilo specialty: roboport ────────────────────────────────────────────
   -- Requires lithium-plate and quantum-processor from Aquilo supply line.

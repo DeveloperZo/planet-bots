@@ -1,5 +1,5 @@
 -- prototypes/bots/vulcanus-construction-bot.lua
--- Vulcanus specialty: fastest construction robot in the mod.
+-- Vulcanus specialty: payload-3 construction robot with volcanic sprint.
 --
 -- MECHANICS (what actually moves the needle for blueprint building):
 --   1. speed                         — flight time per ghost trip. The primary lever.

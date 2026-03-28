@@ -36,6 +36,7 @@ data:extend({
     effects = {
       { type = "unlock-recipe", recipe = "pb-field-drone-depot" },
       { type = "unlock-recipe", recipe = "pb-field-chest" },
+      { type = "unlock-recipe", recipe = "pb-field-charge" },
     },
   },
 
