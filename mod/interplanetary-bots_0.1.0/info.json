@@ -1,0 +1,12 @@
+{
+  "name": "interplanetary-bots",
+  "version": "0.1.0",
+  "title": "Interplanetary Bots",
+  "author": "your-name-here",
+  "description": "Specialty bot upgrades gated by interplanetary supply chains. Vulcanus construction bot (payload 3, volcanic sprint), Fulgora logistic bot (fastest, lightning-immune, supercap energy), Aquilo roboport (4x charging, 2x stations). Pre-vanilla Field Drone tier on Nauvis. No universal best — each upgrade excels in one dimension.",
+  "factorio_version": "2.0",
+  "dependencies": [
+    "base >= 2.0.0",
+    "? space-age"
+  ]
+}

@@ -10,7 +10,7 @@ Work through the items below **in order**. Tick when done.
 
 - [ ] **1.1.1** Register `on_cargo_pod_delivered_cargo` in `control.lua`.
 - [ ] **1.1.2** In handler: detect destination surface and its planet (via surface_properties or surface name).
-- [ ] **1.1.3** For each PlanetBots item in the delivered container (roboports, logistic bots, construction bots): if item is “home” variant and destination is a different planet, replace with corresponding “foreign” variant (same family); if item is “foreign” and destination is that family’s planet, replace with “home” variant. Leave Field Drone/Depot unchanged (Nauvis-only).
+- [ ] **1.1.3** For each Interplanetary Bots item in the delivered container (roboports, logistic bots, construction bots): if item is “home” variant and destination is a different planet, replace with corresponding “foreign” variant (same family); if item is “foreign” and destination is that family’s planet, replace with “home” variant. Leave Field Drone/Depot unchanged (Nauvis-only).
 - [ ] **1.1.4** Test: send home variant to another planet via cargo pod and confirm foreign variant in container; and the reverse.
 
 ---
@@ -27,8 +27,8 @@ Work through the items below **in order**. Tick when done.
 
 - [ ] **1.3.1** Recipe ingredients: set final amounts for all roboport and bot recipes (tungsten, calcite, bioflux, supercapacitor, holmium-plate, lithium-plate, quantum-processor). Remove or replace any `-- TODO: tune` with chosen values.
 - [ ] **1.3.2** Technology: set unit count and time for each planet robotics tech and for pb-field-depot-capacity-1..4 so progression feels right (playtest or document targets).
-- [ ] **1.3.3** Optional: one in-game pass on Vulcanus/Gleba/Fulgora/Aquilo to confirm no family is obviously “always best” or “never worth it.”
+- [ ] **1.3.3** Optional: one in-game pass on Vulcanus/Fulgora/Aquilo (and Gleba — vanilla play unless specialty added) to confirm no specialty feels “always best” or “never worth it.”
 
 ---
 
-When all items are done, milestone 1 is complete. Then move to [02-planet-chests](../02-planet-chests/).
+When all items are done, milestone 1 is complete. Then move to [03-content-and-ux](../03-content-and-ux/).

@@ -1,4 +1,4 @@
-# PlanetBots Roadmap
+# Interplanetary Bots Roadmap
 
 ## Current State (v0.1.0)
 
@@ -16,7 +16,7 @@
 - Cargo pod deliveries don't normalize variant (you can receive home variant items on another planet).
 - Fulgora "lightning immunity" is electric resistance only (does not affect actual lightning damage).
 - Recipe/tech numbers are placeholder; balance pass not done.
-- Planet chests (Compost, Arc Relay, Cryo Seal) not implemented.
+- Planet chest line dropped; compost chest was removed so Gleba stays off the bot/roboport axis (see `docs/planets/04-gleba.md`).
 
 ---
 
@@ -26,7 +26,7 @@
 
 | Mod | Downloads | What they do | Overlap with us | Conflict risk |
 |-----|-----------|-------------|-----------------|---------------|
-| **Robot Attrition** (Earendel) | **526K** | Logistic bots occasionally crash under heavy congestion. Configurable rate. | None — no new entities, no planet gating | **None. Synergistic.** Attrition penalizes wrong-tool-for-job; PlanetBots rewards picking the right family per planet. Players will run both. |
+| **Robot Attrition** (Earendel) | **526K** | Logistic bots occasionally crash under heavy congestion. Configurable rate. | None — no new entities, no planet gating | **None. Synergistic.** Attrition penalizes wrong-tool-for-job; Interplanetary Bots rewards picking the right upgrade per supply chain. Players will run both. |
 | **Nanobots 2.0** | **37K** | Personal nanobot gun that auto-builds blueprint ghosts near you, no roboport needed. | Slight — both add early construction help | Low. Nanobots is personal/gun-based; we are roboport-gated. Different install moments. Likely used together. |
 | **Extended Vanilla: Modular Logistics** | **8.3K** | Adds logistic booster roboport (unlocked on Fulgora: 96×96 radius, 12 charge stations, configurable via settings). Plans 2 additional robot/roboport tiers. | Moderate — also adds a Fulgora-unlocked roboport. **Planning planet-gated tiers.** | **Closest future threat.** Their booster is radius-focused, ours is identity-stat–focused. Different philosophy. But if they ship planet-gated bot tiers before us, we share the install slot. |
 | **Robot World (Space Age)** | **2.4K** | Global sliders for robot speed, battery, radius, charging rate, carry size, health. | High surface overlap — both change bot stats | Philosophically opposite. They give universal sliders; we give fixed planet identities. Most players pick one. Both installed = our stats get overridden by their multipliers (potential conflict). |
@@ -101,7 +101,7 @@ Work is split into **milestones**. Each milestone has a folder under `docs/miles
 |-----------|--------|------|
 | **0 — Baseline** | [00-baseline](./milestones/00-baseline/) | Document what's shipped; no code work. |
 | **1 — Polish & robustness** | [01-polish-and-robustness](./milestones/01-polish-and-robustness/) | Cargo pod normalization, Fulgora lightning hardening, balance pass. |
-| **2 — Planet chests** | [02-planet-chests](./milestones/02-planet-chests/) | Compost Chest (Gleba), Arc Relay Chest (Fulgora), Cryo Seal Chest (Aquilo). |
+| **2 — Planet chests** | [02-planet-chests](./milestones/02-planet-chests/) | **Closed.** No chest specialty; see [04-gleba.md](./planets/04-gleba.md) for rationale and API limits. |
 | **3 — Content & UX** | [03-content-and-ux](./milestones/03-content-and-ux/) | Optional: mod settings, clearer tooltips, custom graphics. |
 | **4 — Future** | [04-future](./milestones/04-future/) | Backlog: quality support, extra mechanics, etc. |
 

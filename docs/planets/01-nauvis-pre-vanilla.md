@@ -2,65 +2,68 @@
 
 ## Identity
 
-Early construction assistance before real robotics. Helps you build perimeter and core base faster during the "secure the base" phase. Deliberately inferior in every dimension — players should be glad to have it and equally glad to replace it.
+Early construction assistance before real robotics — a nanobots-style scripted builder. The player places a **Field Drone Depot** (roboport for the build-zone overlay), loads it with repair packs (ammo), and places **Field Chests** (containers) nearby loaded with construction materials. The depot auto-builds ghosts in its radius, consuming one repair pack and the ghost's ingredients per build. A cosmetic projectile flies from depot to ghost for visual feedback.
 
-No logistics bot. Logistics stays manual until vanilla robotics unlocks. Giving logistics automation before belts and trains are solved would short-circuit the early-game progression entirely.
+Deliberately inferior to real robotics in every dimension. No logistics network, no real bots, manual chest loading. Players should be glad to have it and equally glad to replace it.
 
 ---
 
-## Roboport — Field Drone Depot
+## Two-entity system
 
-**Entity:** `pb-field-drone-depot` (Nauvis only, no foreign variant)
+### Field Drone Depot (`pb-field-drone-depot`)
 
-**Purpose:** Cover a small zone of ghost-placement so you can queue up walls and structures without placing every entity manually. Single charge station and low throughput mean it stalls visibly if you try to use it like real robotics — that friction is intentional.
+**Type:** `roboport` (for construction_radius overlay). No real robots.
 
-| Stat | Value | vs Vanilla |
+| Stat | Value | Notes |
 |---|---|---|
-| Construction radius | 30 | 55% of vanilla 55 |
-| Logistics radius | 1 (none) | — |
-| Charging energy | 500 kW | 0.5× |
-| Charging stations | 2 | 0.5× |
-| Robot slots | 20 | 0.4× |
+| Construction radius | 30 | Build zone (from settings) |
+| Logistics radius | 1 (none) | No logistics network |
+| Robot slots | 0 | No real bots |
+| Material slots | 4 | Holds repair packs (build ammo) |
+| Charging | minimal | No bots to charge |
 
-**Hard cap per force** enforced by script (`scripts/depot-cap.lua`). Unlocked in tiers via research:
+**Scripted building:** `scripts/field-drone-builder.lua` runs on `on_nth_tick`. Scans for ghosts in construction radius, pulls ingredients from nearby Field Chests, consumes one repair pack from material slots per ghost built, revives the ghost, fires a cosmetic projectile.
 
-| Research | Cap |
-|---|---|
-| `pb-field-depot-capacity-1` | 2 |
-| `pb-field-depot-capacity-2` | 3 |
-| `pb-field-depot-capacity-3` | 4 |
-| `pb-field-depot-capacity-4` | 5 |
+**Build rate:** ~2-3 ghosts/second per depot (configurable via startup settings).
 
-Final cap (5 depots) arrives at the oil / blue science era. Construction radius at max research targets ~40 tiles — a meaningful step below vanilla's 55 so the upgrade to real robotics still feels like a gear shift.
+### Field Chest (`pb-field-chest`)
 
----
+**Type:** `container`. 16 slots (configurable).
 
-## Logistic Bot — None
+Place within depot construction radius. Load with construction materials (iron plates, belts, inserters, etc.). The depot's script pulls items exclusively from Field Chests — never from the player's inventory.
 
-Deliberate omission. Adding logistics automation before the belt/train era would eliminate a core progression beat. Players stage materials manually.
+Simple recipe: iron-plate (8) + wood (4).
 
 ---
 
-## Construction Bot — Field Drone
+## Shared placement cap
 
-**Entity:** `pb-field-drone-home`
+Both depots and Field Chests count toward one per-force cap. Enforced by `scripts/depot-cap.lua`.
 
-**Purpose:** Place ghosts faster so walling-in and core construction don't feel tedious. Hard speed cap and high energy costs ensure that trying to run a large swarm produces visible feedback — bots stall, builds drag, the player feels pressure to unlock real robotics.
-
-| Stat | Value | vs Vanilla |
+| Research | Cap | Typical layout |
 |---|---|---|
-| Speed | 0.025 | 0.42× |
-| Max speed (hard cap) | 0.04 | Research barely matters |
-| Max energy | 0.5 MJ | 0.33× |
-| Energy per move | 10 kJ | 2× vanilla (worse) |
-| Energy per tick (idle) | 6 kW | 2× vanilla (worse) |
-| Payload | 1 | Same |
-| Health | 60 | 0.6× |
-| Min charge threshold | 30% | Returns to depot frequently |
-| Out-of-energy speed | 0.1× | Nearly stops — very visible |
+| Base (pb-field-drones) | 3 | 1 depot + 2 chests |
+| pb-field-depot-capacity-1 | 5 | 1 depot + 4 chests |
+| pb-field-depot-capacity-2 | 7 | 2 depots + 5 chests |
+| pb-field-depot-capacity-3 | 10 | 2-3 depots + chests |
+| pb-field-depot-capacity-4 | 14 | 3-4 depots + chests |
+
+---
+
+## Gameplay loop
+
+1. Research `pb-field-drones` (automation science, 50 packs)
+2. Craft and place a Field Drone Depot
+3. Craft and place 1-2 Field Chests within the depot's blue radius
+4. Load repair packs into the depot (material slots)
+5. Load construction materials into the chests
+6. Blueprint something in range — depot auto-builds
+7. Refill chests and repair packs as needed
+
+**Key difference from real robotics:** manual loading. No logistics network to auto-resupply. When materials run out, building stops. This makes real robotics a genuine upgrade, not just "more of the same."
 
 ---
 
 ## Non-Home Variant
 
-None. Placement script returns the item if a Field Drone Depot or Field Drone is placed off Nauvis.
+None. Placement script returns the item if a Field Drone Depot or Field Chest is placed off Nauvis.

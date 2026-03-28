@@ -1,21 +1,19 @@
-# PlanetBots — Framework Reference
+# Interplanetary Bots — Framework Reference
 
 **Sequenced work:** See [docs/roadmap.md](roadmap.md) and [docs/milestones/](milestones/) for milestones and work items one-by-one.
 
 ## Design Philosophy
 
-Each planet produces **one specialty item** — the best of its class in the mod. Items are
-craftable anywhere; the gate is the supply chain, not placement. Players who develop all four
-planets get the best-in-slot construction bot, logistic bot, roboport, and chest. Players who
-skip a planet use vanilla equivalents instead.
+Each Space Age planet with a specialty contributes **one** best-in-mod item: construction bot,
+logistic bot, or roboport. Items are craftable anywhere; the gate is the supply chain, not
+placement. **Gleba** has no Interplanetary Bots specialty yet (undecided; the mod stays on the bot / roboport axis).
 
-
-| Planet   | Specialty                                        | Key gate materials               |
-| -------- | ------------------------------------------------ | -------------------------------- |
-| Vulcanus | Construction bot (payload 3)                     | tungsten-plate, calcite          |
-| Fulgora  | Logistic bot (fastest + lightning-immune)        | supercapacitor, holmium-plate    |
-| Aquilo   | Roboport (4× charging, 2× stations)              | lithium-plate, quantum-processor |
-| Gleba    | Compost chest (nutrient-fueled spoilage control) | bioflux                          |
+| Planet   | Specialty                                 | Key gate materials               |
+| -------- | ----------------------------------------- | -------------------------------- |
+| Vulcanus | Construction bot (payload 3)              | tungsten-plate, calcite          |
+| Fulgora  | Logistic bot (fastest + lightning-immune) | supercapacitor, holmium-plate    |
+| Aquilo   | Roboport (4× charging, 2× stations)       | lithium-plate, quantum-processor |
+| Gleba    | *(undecided — see `docs/planets/04-gleba.md`)* | —                           |
 
 
 No `surface_conditions` on any specialty recipe. No home/foreign variants. One item per
@@ -45,31 +43,35 @@ planetbots/
 │       ├── 05-fulgora.md
 │       └── 06-aquilo.md
 └── mod/
-    └── planetbots_0.1.0/
+    └── interplanetary-bots_0.1.0/
         ├── info.json
         ├── data.lua
         ├── data-final-fixes.lua
         ├── control.lua
+        ├── settings.lua
         ├── scripts/
-        │   ├── placement.lua        — Field Drone Depot: Nauvis-only block + depot cap
-        │   ├── depot-cap.lua        — Field Drone Depot per-force cap
-        │   └── compost-chest.lua    — Compost chest on_nth_tick spoilage logic (TODO)
+        │   ├── placement.lua          — Nauvis-only block + shared depot/chest cap
+        │   ├── depot-cap.lua          — per-force cap (depots + chests)
+        │   ├── field-drone-builder.lua — scripted ghost builder (on_nth_tick)
+        │   └── fulgora-hardening.lua  — electric damage immunity
         ├── prototypes/
         │   ├── shared/
-        │   │   └── palettes.lua     — tint colours (kept for Field Drone Depot)
+        │   │   ├── palettes.lua       — tint colours
+        │   │   └── sprite-util.lua    — tinted copy / icon helpers
         │   ├── items/
         │   │   ├── item-groups.lua
-        │   │   ├── specialty-items.lua   — one item per specialty
-        │   │   └── field-drone-items.lua
+        │   │   ├── roboport-items.lua — depot, field chest, Aquilo roboport
+        │   │   └── bot-items.lua      — Vulcanus construction, Fulgora logistic
         │   ├── entities/
         │   │   ├── field-drone-depot.lua
-        │   │   ├── vulcanus-construction-bot.lua
-        │   │   ├── fulgora-logistic-bot.lua
+        │   │   ├── field-chest.lua
+        │   │   ├── field-drone-projectile.lua
         │   │   ├── aquilo-roboport.lua
-        │   │   └── gleba-compost-chest.lua   (TODO)
+        │   │   ├── vulcanus-construction-bot.lua (in bots/)
+        │   │   └── fulgora-logistic-bot.lua (in bots/)
         │   ├── recipes/
-        │   │   ├── specialty-recipes.lua
-        │   │   └── field-drone-recipes.lua
+        │   │   ├── roboports.lua      — depot, field chest, Aquilo roboport
+        │   │   └── bots.lua           — Vulcanus construction, Fulgora logistic
         │   └── technologies/
         │       └── planetbots-technologies.lua
         ├── locale/en/
@@ -95,7 +97,6 @@ Examples:
 pb-vulcanus-construction-robot
 pb-fulgora-logistic-robot
 pb-aquilo-roboport
-pb-gleba-compost-chest
 ```
 
 **Field Drone exception** — pre-vanilla tier uses `pb-field-drone` and `pb-field-drone-depot`
@@ -129,7 +130,6 @@ Each specialty recipe requires:
 | pb-vulcanus-construction-robot | tungsten-plate, calcite          |
 | pb-fulgora-logistic-robot      | supercapacitor, holmium-plate    |
 | pb-aquilo-roboport             | lithium-plate, quantum-processor |
-| pb-gleba-compost-chest         | bioflux                          |
 
 
 ---
@@ -137,13 +137,13 @@ Each specialty recipe requires:
 ## Planet environment levers (specialty-scoped)
 
 **Design rule:** Planet identity — “what this world does to your automation” — is expressed on **that
-planet’s specialty prototype only** (`pb-*` construction bot, logistic bot, roboport, compost chest,
-or field-drone tier). When we talk about a **planet multiplier** or environmental lever in docs or
+planet’s specialty prototype only** (`pb-*` construction bot, logistic bot, roboport, or field-drone
+tier). When we talk about a **planet multiplier** or environmental lever in docs or
 balance, we mean **fields on that one entity** (or its paired script), not a hidden blanket modifier
 on vanilla robots.
 
 **Vanilla engine caveat (Aquilo):** Space Age applies a **global** flying-robot energy penalty on the
-Aquilo surface to **all** logistic and construction robots, including vanilla. PlanetBots does not
+Aquilo surface to **all** logistic and construction robots, including vanilla. Interplanetary Bots does not
 override that. Our scoped lever is **`pb-aquilo-roboport`**: higher `charging_energy`, more
 `charging_station_count`, and larger `robot_slots_count` so networks can **compensate** for the
 global drain. We do **not** document an extra “Aquilo tax” that applies only to e.g.
@@ -153,10 +153,10 @@ global drain. We do **not** document an extra “Aquilo tax” that applies only
 
 | Planet              | Specialty prototype              | Type     | Where planet identity lives |
 | ------------------- | -------------------------------- | -------- | --------------------------- |
-| Nauvis (pre-vanilla)| `pb-field-drone-home`, depot     | Drone    | Drone + depot prototypes + depot-cap script |
+| Nauvis (pre-vanilla)| `pb-field-drone-depot` + `pb-field-chest` | Scripted builder | Depot (roboport for radius) + chest (container) + `field-drone-builder.lua` |
 | Vulcanus          | `pb-vulcanus-construction-robot` | Bot      | Construction-robot fields   |
 | Fulgora           | `pb-fulgora-logistic-robot`      | Bot      | Logistic-robot fields + `fulgora-hardening.lua` |
-| Gleba             | `pb-gleba-compost-chest`         | Chest    | Chest prototype + `compost-chest.lua` |
+| Gleba             | —                                | —        | *(undecided — see `docs/planets/04-gleba.md`)*  |
 | Aquilo            | `pb-aquilo-roboport`             | Roboport | Roboport fields (offsets vanilla global bot drain on Aquilo) |
 
 ---
@@ -191,13 +191,6 @@ Use on **`pb-aquilo-roboport`** (or field depot): `charging_energy`, `charging_s
 `robot_slots_count`, `material_slots_count`, `energy_source`, `energy_usage`, `logistics_radius`,
 `construction_radius`, resistances, slot/animation fields as needed. **Design rule:** keep
 logistics/construction radius aligned with vanilla unless a milestone explicitly changes it.
-
----
-
-### Non-bot specialty levers
-
-- **Compost chest (`pb-gleba-compost-chest`):** spoilage multipliers, fuel consumption, slot rules —
-  see [milestones/02-planet-chests/compost-chest-design.md](milestones/02-planet-chests/compost-chest-design.md).
 
 ---
 
@@ -251,35 +244,21 @@ Vanilla baseline: charging_energy 1,000 kW, charging_stations 4, robot_slots 50.
 | Logistics radius    | 25           | 25       | Unchanged              |
 | Construction radius | 55           | 55       | Unchanged              |
 
-
-### Compost Chest — pb-gleba-compost-chest
-
-See full specification: `[docs/milestones/02-planet-chests/compost-chest-design.md](milestones/02-planet-chests/compost-chest-design.md)`
-
-
-| State    | Spoil rate     | Trigger               |
-| -------- | -------------- | --------------------- |
-| Fueled   | 15% of normal  | Nutrient in fuel slot |
-| Unfueled | 200% of normal | Fuel slot empty       |
-
-
-Fuel consumption: 1 nutrient per minute.
-
 ---
 
 ## Research Tree
 
 ```
-automation => pb-field-drones
-               └=> pb-field-depot-capacity-1 => -2 => -3 => -4
+automation => pb-field-drones (depot + chest)
+               └=> pb-field-depot-capacity-1 => -2 => -3 => -4  (shared cap)
 
-robotics => pb-vulcanus-robotics   (metallurgic science pack)   => pb-vulcanus-construction-robot
-robotics => pb-gleba-robotics      (agricultural science pack)  => pb-gleba-compost-chest
-robotics => pb-fulgora-robotics    (electromagnetic science pack) => pb-fulgora-logistic-robot
-robotics => pb-aquilo-robotics     (cryogenic science pack)     => pb-aquilo-roboport
+robotics => pb-vulcanus-robotics   (metallurgic science pack)       => pb-vulcanus-construction-robot
+robotics => pb-fulgora-robotics    (electromagnetic science pack)   => pb-fulgora-logistic-robot
+robotics => pb-aquilo-robotics     (cryogenic science pack)         => pb-aquilo-roboport
+             (prereq: Vulcanus + Fulgora robotics; Gleba TBD)
 ```
 
-Each planet technology unlocks **one recipe**: its specialty item.
+Each planet technology unlocks **one recipe** for its specialty item (Gleba: TBD).
 
 Technology names `pb-field-depot-capacity-1` through `pb-field-depot-capacity-4` are
 **referenced by name in scripts/depot-cap.lua**. Do not rename without updating the script.
@@ -291,12 +270,13 @@ Technology names `pb-field-depot-capacity-1` through `pb-field-depot-capacity-4`
 
 | Feature                            | Where                          | Status                                  |
 | ---------------------------------- | ------------------------------ | --------------------------------------- |
-| Field Drone Depot off-Nauvis block | `scripts/placement.lua`        | Done                                    |
-| Field Drone off-Nauvis block       | `scripts/placement.lua`        | Done                                    |
-| Field Drone depot cap enforcement  | `scripts/depot-cap.lua`        | Done                                    |
-| Depot cap research upgrades        | `scripts/depot-cap.lua`        | Done                                    |
-| Compost chest spoilage logic       | `scripts/compost-chest.lua`    | TODO                                    |
-| Cargo pod variant normalization    | `on_cargo_pod_delivered_cargo` | TODO (lower priority — no variants now) |
+| Field Drone Depot off-Nauvis block | `scripts/placement.lua`           | Done                                    |
+| Field Chest off-Nauvis block       | `scripts/placement.lua`           | Done                                    |
+| Shared depot/chest cap enforcement | `scripts/depot-cap.lua`           | Done                                    |
+| Cap research upgrades              | `scripts/depot-cap.lua`           | Done                                    |
+| Scripted ghost builder             | `scripts/field-drone-builder.lua` | Done                                    |
+| Depot entity tracking              | `control.lua` + builder script    | Done                                    |
+| Cargo pod variant normalization    | `on_cargo_pod_delivered_cargo`    | TODO (lower priority — no variants now) |
 
 
 ---
@@ -314,12 +294,11 @@ test, remove or replace:
 - Rewrite `prototypes/entities/vulcanus-construction-bot.lua` (new file, single variant)
 - Rewrite `prototypes/entities/fulgora-logistic-bot.lua` (new file, single variant)
 - Rewrite `prototypes/entities/aquilo-roboport.lua` (single variant)
-- Rewrite `prototypes/entities/gleba-compost-chest.lua` (new)
 - Update `prototypes/items/` — remove home/foreign items, add one item per specialty
 - Update `prototypes/recipes/` — remove surface_conditions, one recipe per specialty
 - Update `prototypes/technologies/` — each tech unlocks one recipe
 - Update `locale/en/planetbots.cfg` — remove foreign/home entries, add specialty entries
-- Update `control.lua` / `scripts/` — remove any home/foreign swap logic, add compost chest
+- Update `control.lua` / `scripts/` — remove any home/foreign swap logic
 
 ---
 
@@ -334,7 +313,6 @@ test, remove or replace:
 
 - tungsten-plate (Vulcanus)
 - calcite (Vulcanus)
-- bioflux (Gleba)
 - supercapacitor, holmium-plate (Fulgora)
 - lithium-plate, quantum-processor (Aquilo)
 - ice-platform (Aquilo) — confirm item name

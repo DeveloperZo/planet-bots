@@ -1,59 +1,48 @@
 # Gleba
 
-## Specialty: Compost Chest
+## Interplanetary Bots scope
 
-Gleba does not produce a specialty robot or roboport. Its contribution to the inter-planetary
-robot economy is the **Compost Chest** — the only structure in the mod that actively manages
-spoilage for items stored inside it.
+Gleba does **not** have a specialty item yet. The current progression is **construction bot
+(Vulcanus) → logistic bot (Fulgora) → roboport (Aquilo)**; Gleba's slot is **open and undecided**.
 
-Gleba's nutrient economy makes this thematic: the chest is fed nutrients as fuel, and while
-fueled it preserves its contents. Let the fuel run out and it punishes you — items spoil faster
-than they would outside. The chest integrates into the nutrient pipeline rather than sitting
-beside it.
-
-Useful anywhere spoilable items transit through or accumulate: Gleba itself, agricultural
-outposts, science pack buffer chests.
-
-**Why Gleba?** The planet is defined by the spoilage clock and the nutrient loop. A chest that
-externalizes that loop as a mechanic is the natural Gleba contribution — not faster or heavier
-robots, but a structural solution to the problem Gleba creates.
+Gleba remains important for **vanilla** Space Age (agricultural science, bio routes, spoilage).
+Players use vanilla logistics chests and bots like everywhere else — for now.
 
 ---
 
-## Compost Chest — behavior summary
+## Status: open / undecided
 
-See full specification: `[docs/milestones/02-planet-chests/compost-chest-design.md](../milestones/02-planet-chests/compost-chest-design.md)`
+The design space for Gleba has not been committed. It is neither closed nor promised — it will be
+filled if and when a compelling mechanic is identified that meets these criteria:
 
+1. Stays on the **bot / roboport axis** (consistent with the rest of the mod).
+2. Offers **genuinely distinct gameplay**, not just a numeric reskin.
+3. Ideally leverages **prototype-only or lightweight scripting** — not fragile `on_nth_tick`
+   inventory surgery.
 
-| State        | Spoil rate inside chest | Condition                      |
-| ------------ | ----------------------- | ------------------------------ |
-| **Fueled**   | **15% of normal**       | Nutrient in slot 1 (fuel slot) |
-| **Unfueled** | **200% of normal**      | Fuel slot empty                |
+### Candidate under consideration
 
+**Regenerating frontier construction bot** — a Gleba construction bot using `healing_per_tick`
+(unused on vanilla bots) and broad acid/explosion resistances. Niche: hostile-environment
+construction where vanilla bots die to biters/spitters. Differentiated from Vulcanus construction
+bot (throughput via payload + speed) by being a *survival* tool rather than a *throughput* tool.
+This is a prototype-only design — no runtime scripting required.
 
-**Fuel consumption:** 1 nutrient per minute of fueled operation.
-
-Slot 1 is locked to `nutrient` by the script. Slots 2–20 are general storage.
-
----
-
-## Recipe
-
-**Item name:** `pb-gleba-compost-chest`
-
-**Ingredients:** iron-chest × 1 + bioflux × 3 + nutrients × 10 + wooden-chest × 2
-
-No `surface_conditions`. Craftable anywhere. Requires a Gleba supply line for the bioflux.
-
-**Tech gate:** `pb-gleba-robotics` — requires agricultural science pack.
+This candidate has not been accepted. It is listed here as a starting point for future design work.
 
 ---
 
-## Robots and Roboports
+## Chest line: closed
 
-Gleba does **not** produce specialty robots or roboports. Use:
+The old compost-chest milestone is **permanently dropped** — not on hold, not archived for revival.
+See [milestones/02-planet-chests/README.md](../milestones/02-planet-chests/README.md).
 
-- **Vulcanus construction bots** for large builds
-- **Fulgora logistic bots** for fast delivery
-- **Aquilo roboports** as your network backbone
+Logistic chests were evaluated and found to offer only incremental numeric variants via prototypes,
+not a new strategic axis. See the analysis in the milestone archive for details.
 
+---
+
+## Cross-references
+
+- [FRAMEWORK.md — Design philosophy](../FRAMEWORK.md#design-philosophy) — current specialties + field drones
+- [FRAMEWORK.md — Research tree](../FRAMEWORK.md#research-tree) — no `pb-gleba-robotics` (yet)
